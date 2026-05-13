@@ -13,6 +13,16 @@ import lombok.*;
 @AllArgsConstructor
 
 public abstract class Course {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    //Attributes
+    private Long id;
+    private String courseCode;
+    private String courseName;
+    private String department;
+    private int credits;
+
 
 
 }
