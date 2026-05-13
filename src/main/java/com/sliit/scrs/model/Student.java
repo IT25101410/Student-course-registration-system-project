@@ -3,13 +3,13 @@ package com.sliit.scrs.model;
 import jakarta.persistence.*;  //For interact with database    // * for importing every class & interfaces
 import lombok.*;  //Shortcuts for getters setters
 
-@Entity
-@Table(name="students")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="student_type")
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Entity //Set this class as database-backed object
+@Table(name="students") //Name table as students
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE) //This means if there different classes like parent and child, use single talbe...
+@DiscriminatorColumn(name="student_type") //This works like a label ("UNDERGRADUATE" or "POSTGRADUATE")
+@Data //Automatic generate getters and setters
+@NoArgsConstructor //Create constructor with no arguments
+@AllArgsConstructor //Creates  constructor accepts all fields
 
 public abstract class Student {
     @Id //Set id field as primary key
