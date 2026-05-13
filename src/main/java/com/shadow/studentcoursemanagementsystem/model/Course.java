@@ -28,6 +28,8 @@ public abstract class Course {
     @Column(nullable = false)
     private int credits;
 
+    //Abstract Method
+    public abstract String getDescription();
 
 
 }
