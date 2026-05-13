@@ -1,4 +1,4 @@
-package com.shadow.studentcoursemanagementsystem;
+package com.sliit.srcs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
