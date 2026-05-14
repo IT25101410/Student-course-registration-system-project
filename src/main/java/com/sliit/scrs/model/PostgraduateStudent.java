@@ -1,9 +1,9 @@
 package com.sliit.scrs.model;
 
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import jakarta.persistence.DiscriminatorValue;  //
+import jakarta.persistence.Entity;  //
+import lombok.AllArgsConstructor;  //
+import lombok.Data;   //
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
