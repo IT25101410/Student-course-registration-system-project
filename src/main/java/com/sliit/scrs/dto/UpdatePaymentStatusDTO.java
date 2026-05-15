@@ -1,7 +1,6 @@
 package com.sliit.scrs.dto;
 
 import lombok.*;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
