@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;  //
 @EqualsAndHashCode(callSuper = true) //When comparing two objects, if they are the same go to Parent class and check those fields too.
 
 public class UndergraduateStudent extends Student {
-    private int yearOfStudy;
+    private int yearOfStudy;   //Attribute
 
     public UndergraduateStudent(Long id, String name, String email, String phone, int yearOfStudy) {
         super(id, name, email, phone);
         this.yearOfStudy = yearOfStudy;
-    }
+    }   //Constructors
 
     @Override
     public double calculateFee() {
         return 75000.0;
-    }
+    }   //Method
 }
