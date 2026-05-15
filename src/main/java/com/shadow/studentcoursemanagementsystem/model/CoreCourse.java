@@ -19,6 +19,9 @@ public class CoreCourse extends Course {
         super(id, courseCode, courseName, department, credits);
         this.isMandatory=isMandatory;
     }
-    
 
+    @Override
+    public String getDescription() {
+        return "Core course — Mandatory: " + (isMandatory ? "Yes" : "No");
+    }
 }
