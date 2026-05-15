@@ -1,14 +1,14 @@
 package com.sliit.scrs.model;
 
-import jakarta.persistence.DiscriminatorValue;  //
+import jakarta.persistence.DiscriminatorValue;  //For label when dealing with inheritance
 import jakarta.persistence.Entity;  //
 import lombok.AllArgsConstructor;  //
 import lombok.Data;   //
 import lombok.EqualsAndHashCode;  //
 import lombok.NoArgsConstructor;  //
 
-@Entity
-@DiscriminatorValue("POSTGRADUATE")
+@Entity  //Set this class as database-backed object
+@DiscriminatorValue("POSTGRADUATE")  //Its work like a label
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

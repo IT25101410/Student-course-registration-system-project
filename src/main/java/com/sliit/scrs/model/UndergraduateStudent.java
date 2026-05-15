@@ -1,18 +1,18 @@
 package com.sliit.scrs.model;
 
-import jakarta.persistence.DiscriminatorValue; //
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.DiscriminatorValue; // For label when dealing with inheritance
+import jakarta.persistence.Entity;  //
+import lombok.AllArgsConstructor;  //
+import lombok.Data;  //
+import lombok.EqualsAndHashCode;  //
+import lombok.NoArgsConstructor;  //
 
-@Entity
-@DiscriminatorValue("UNDERGRADUATE")
+@Entity //Set this class as database-backed object
+@DiscriminatorValue("UNDERGRADUATE")  //Its work like a label
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode(callSuper = true) //When comparing two objects, if they are the same go to Parent class and check those fields too.
 
 public class UndergraduateStudent extends Student {
     private int yearOfStudy;
