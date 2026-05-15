@@ -13,6 +13,12 @@ import lombok.*;
 public class CoreCourse extends Course {
     //Attributes
     private boolean isMandatory;
+
+    //Parameterized Constructor
+    public CoreCourse(Long id,String courseCode,String courseName,String department,int credits , boolean isMandatory){
+        super(id, courseCode, courseName, department, credits);
+        this.isMandatory=isMandatory;
+    }
     
 
 }
