@@ -11,5 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 
 public class CoreCourse extends Course {
+    //Attributes
+    private boolean isMandatory;
     
+
 }
