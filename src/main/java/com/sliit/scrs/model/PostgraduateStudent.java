@@ -15,15 +15,15 @@ import lombok.NoArgsConstructor;  //
 @EqualsAndHashCode(callSuper = true)
 
 public class PostgraduateStudent extends Student {
-    private String researchArea;
+    private String researchArea; //Attribute
 
     public PostgraduateStudent(Long id, String name, String email, String phone, String researchArea) {
-        super(id, name, email, phone);
+        super(id, name, email, phone); //Access to parent class constructors
         this.researchArea = researchArea;
-    }
+    }  //Constructor
 
     @Override
     public double calculateFee() {
-        return 120000.0; // higher fee for postgrad
-    }
+        return 120000.0; //higher fee for postgraduate
+    }  //Method
 }

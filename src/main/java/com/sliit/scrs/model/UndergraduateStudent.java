@@ -18,12 +18,12 @@ public class UndergraduateStudent extends Student {
     private int yearOfStudy;   //Attribute
 
     public UndergraduateStudent(Long id, String name, String email, String phone, int yearOfStudy) {
-        super(id, name, email, phone);
+        super(id, name, email, phone);  //Access to parent class constructors
         this.yearOfStudy = yearOfStudy;
     }   //Constructors
 
     @Override
     public double calculateFee() {
-        return 75000.0;
+        return 75000.0; //Lower fee for postgraduate
     }   //Method
 }
