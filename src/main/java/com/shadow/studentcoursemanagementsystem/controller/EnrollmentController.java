@@ -33,4 +33,25 @@ public class EnrollmentController {
             @PathVariable Long studentId) {
         return ResponseEntity.ok(enrollmentService.getEnrollmentsByStudent(studentId));
     }
+
+    // View enrollments by course
+    @GetMapping("/course/{courseId}")
+    public ResponseEntity<List<EnrollmentResponseDTO>> getByCourse(
+            @PathVariable Long courseId) {
+        return ResponseEntity.ok(enrollmentService.getEnrollmentsByCourse(courseId));
+    }
+
+    // View single enrollment
+    @GetMapping("/{id}")
+    public ResponseEntity<EnrollmentResponseDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(enrollmentService.getEnrollmentById(id));
+    }
+
+    // Drop a course
+    @PatchMapping("/{id}/drop")
+    public ResponseEntity<String> dropCourse(@PathVariable Long id) {
+        enrollmentService.dropCourse(id);
+        return ResponseEntity.ok("Course dropped successfully.");
+    }
 }
+
