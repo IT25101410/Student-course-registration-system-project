@@ -4,7 +4,7 @@ import jakarta.persistence.DiscriminatorValue; // For label when dealing with in
 import jakarta.persistence.Entity;  //
 import lombok.AllArgsConstructor;  //
 import lombok.Data;  //
-import lombok.EqualsAndHashCode;  //ggfgffgfghfhgghfgf
+import lombok.EqualsAndHashCode;  //
 import lombok.NoArgsConstructor;  //
 
 @Entity //Set this class as database-backed object
