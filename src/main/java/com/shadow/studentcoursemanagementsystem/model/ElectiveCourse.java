@@ -20,7 +20,8 @@ public class ElectiveCourse extends Course{
         this.electiveCategory = electiveCategory;
     }
 
-
-
-
+    @Override
+    public String getDescription() {
+        return "Elective course - Category : "+electiveCategory;
+    }
 }
