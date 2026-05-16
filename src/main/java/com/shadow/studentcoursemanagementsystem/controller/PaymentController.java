@@ -35,7 +35,7 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getPaymentById(id));
     }
 
-    // View payment history by student
+    // View payment history by studen
     @GetMapping("/student/{studentId}")
     public ResponseEntity<List<PaymentResponseDTO>> getByStudent(
             @PathVariable Long studentId) {
