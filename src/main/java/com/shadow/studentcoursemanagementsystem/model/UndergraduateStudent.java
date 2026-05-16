@@ -1,4 +1,4 @@
-package com.sliit.scrs.model;
+package com.shadow.studentcoursemanagementsystem.model;
 
 import jakarta.persistence.DiscriminatorValue; // For label when dealing with inheritance
 import jakarta.persistence.Entity;  //

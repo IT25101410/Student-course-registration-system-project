@@ -1,4 +1,4 @@
-package com.sliit.scrs.model;
+package com.shadow.studentcoursemanagementsystem.model;
 
 import jakarta.persistence.*;  //For interact with database    // * for importing every class & interfaces
 import lombok.*;  //Shortcuts for getters setters
