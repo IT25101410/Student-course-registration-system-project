@@ -1,9 +1,12 @@
-package com.sliit.scrs.controller;
+package com.shadow.studentcoursemanagementsystem.controller;
 
 
 
+import com.shadow.studentcoursemanagementsystem.dto.PaymentRequestDTO;
+import com.shadow.studentcoursemanagementsystem.dto.PaymentResponseDTO;
+import com.shadow.studentcoursemanagementsystem.dto.UpdatePaymentStatusDTO;
 import com.sliit.scrs.dto.*;
-import com.sliit.scrs.service.PaymentService;
+import com.shadow.studentcoursemanagementsystem.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

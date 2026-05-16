@@ -1,4 +1,4 @@
-package com.sliit.scrs.dto;
+package com.shadow.studentcoursemanagementsystem.dto;
 
 
 import lombok.*;

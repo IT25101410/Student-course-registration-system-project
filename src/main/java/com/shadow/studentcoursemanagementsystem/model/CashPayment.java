@@ -1,4 +1,4 @@
-package com.sliit.scrs.model;
+package com.shadow.studentcoursemanagementsystem.model;
 
 
 

@@ -1,6 +1,6 @@
-package com.sliit.scrs.repository;
+package com.shadow.studentcoursemanagementsystem.repository;
 
-import com.sliit.scrs.model.Payment;
+import com.shadow.studentcoursemanagementsystem.model.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
