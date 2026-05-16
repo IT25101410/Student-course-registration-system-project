@@ -12,5 +12,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class ElectiveCourse extends Course{
+    //Attributes
+    private String electiveCategory;
+    //Parameterized Constructor
+    public ElectiveCourse(Long id, String courseCode, String courseName, String department, int credits, String electiveCategory) {
+        super(id, courseCode, courseName, department, credits);
+        this.electiveCategory = electiveCategory;
+    }
+
+
+
 
 }
