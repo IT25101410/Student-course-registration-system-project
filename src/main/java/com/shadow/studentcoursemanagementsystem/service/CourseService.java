@@ -1,8 +1,9 @@
 package com.shadow.studentcoursemanagementsystem.service;
 
+import com.shadow.studentcoursemanagementsystem.dto.CourseRequestDTO;
 import com.shadow.studentcoursemanagementsystem.dto.CourseResponseDTO;
 
 //Data input and output
 public interface CourseService {
-    CourseResponseDTO addCourse(CourseResponseDTO dto);
+    CourseResponseDTO addCourse(CourseRequestDTO dto);
 }
