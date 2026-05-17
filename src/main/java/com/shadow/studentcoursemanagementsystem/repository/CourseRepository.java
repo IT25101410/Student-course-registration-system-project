@@ -1,5 +1,15 @@
 package com.shadow.studentcoursemanagementsystem.repository;
 
+import com.shadow.studentcoursemanagementsystem.model.Course;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface CourseRepository {
+import java.util.Optional;
+
+@Repository
+public interface CourseRepository  extends JpaRepository<Course,Long> {
+    Optional<Course>findCourseCode(String courseCode);
+    boolean existsByCourseCode(String  courseCode);
+
+
 }
