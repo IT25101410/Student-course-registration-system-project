@@ -1,4 +1,4 @@
 package com.shadow.studentcoursemanagementsystem.repository;
 
-public class CourseRepository {
+public class AdminRepository {
 }
