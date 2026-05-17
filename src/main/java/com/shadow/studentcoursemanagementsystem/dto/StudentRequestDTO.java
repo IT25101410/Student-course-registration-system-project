@@ -9,10 +9,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class StudentRequestDTO {
-    private String name;
-    private String email;
-    private String phone;
+    private String name; //
+    private String email; //
+    private String phone; //
     private String type; // "UNDERGRADUATE" or "POSTGRADUATE"
     private Integer yearOfStudy; // only for undergrad
-    private String researchArea;
+    private String researchArea; //
 }
