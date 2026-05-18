@@ -11,6 +11,9 @@ import com.shadow.studentcoursemanagementsystem.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CourseServiceImpl implements CourseService {
 
@@ -53,7 +56,12 @@ public class CourseServiceImpl implements CourseService {
         return mapToResponse(saved);
     }
 
-
-
-
+    //Read All the Course
+    @Override
+    public List<CourseResponseDTO> getAllCourses() {
+        return  courseRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
 }
