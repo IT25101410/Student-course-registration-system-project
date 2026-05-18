@@ -64,4 +64,11 @@ public class CourseServiceImpl implements CourseService {
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
     }
+    //Read the one Course
+    @Override
+    public CourseResponseDTO getCourseById(Long id) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id : "+id));
+        return mapToResponse(course);
+    }
 }
