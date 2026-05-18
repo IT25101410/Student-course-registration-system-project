@@ -71,4 +71,17 @@ public class CourseServiceImpl implements CourseService {
                 .orElseThrow(() -> new RuntimeException("Course not found with id : "+id));
         return mapToResponse(course);
     }
+
+    private CourseResponseDTO mapToResponse(Course course){
+        String type =(course instanceof CoreCourse) ? "CORE" : "ELECTIVE";
+        return  new CourseResponseDTO(
+                course.getId(),
+                course.getCourseCode(),
+                course.getCourseName(),
+                course.getDepartment(),
+                course.getCredits(),
+                type,
+                course.getDescription()
+        );
+    }
 }
