@@ -36,6 +36,12 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
+    //Read One
+    @GetMapping("/{id}")
+    public ResponseEntity<CourseResponseDTO>getCourseById(@PathVariable Long id){
+        return ResponseEntity.ok(courseService.getCourseById(id));
+    }
+
 
 
 
