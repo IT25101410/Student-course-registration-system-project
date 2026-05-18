@@ -72,6 +72,8 @@ public class CourseServiceImpl implements CourseService {
         return mapToResponse(course);
     }
 
+
+    //Create the mapToResponse method
     private CourseResponseDTO mapToResponse(Course course){
         String type =(course instanceof CoreCourse) ? "CORE" : "ELECTIVE";
         return  new CourseResponseDTO(
