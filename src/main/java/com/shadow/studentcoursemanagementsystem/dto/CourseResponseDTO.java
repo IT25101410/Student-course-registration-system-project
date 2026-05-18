@@ -16,6 +16,9 @@ public class CourseResponseDTO {
     private int credits;
     private String type;
     private String description;
+    
+
+
 
 
 }
