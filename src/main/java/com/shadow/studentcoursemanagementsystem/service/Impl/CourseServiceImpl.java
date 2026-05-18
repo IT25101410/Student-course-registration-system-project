@@ -72,6 +72,33 @@ public class CourseServiceImpl implements CourseService {
         return mapToResponse(course);
     }
 
+    @Override
+    public CourseResponseDTO updateCourse(Long id,  CourseRequestDTO dto) {
+        Course course = courseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Course not found with id: " + id));
+        course.setCourseName(dto.getCourseName());
+        course.setDepartment(dto.getDepartment());
+        course.setCredits(dto.getCredits());
+
+        if (course instanceof CoreCourse cc) {
+            cc.setMandatory(dto.getIsMandatory() != null && dto.getIsMandatory());
+        }
+        else if (course instanceof ElectiveCourse ec) {
+            ec.setElectiveCategory(dto.getElectiveCategory());
+        }
+        Course updated = courseRepository.save(course);
+        return mapToResponse(updated);
+
+
+    }
+
+    @Override
+    public void deleteCourse(Long id) {
+        if (!courseRepository.existsById(id)) {
+            throw new RuntimeException("Course not found with id: " + id);
+        }
+        courseRepository.deleteById(id);
+    }
 
     //Create the mapToResponse method
     private CourseResponseDTO mapToResponse(Course course){
@@ -84,6 +111,7 @@ public class CourseServiceImpl implements CourseService {
                 course.getCredits(),
                 type,
                 course.getDescription()
+
         );
     }
 }
