@@ -16,3 +16,8 @@ public class StudentRequestDTO {
     private Integer yearOfStudy; // only for undergrad
     private String researchArea; //
 }
+
+
+    /*DTO - Data Transfer Object
+          This is simple object use to carry data to one place to another
+     */
