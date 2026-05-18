@@ -10,4 +10,8 @@ public interface CourseService {
     CourseResponseDTO addCourse(CourseRequestDTO dto);
     // Read all Course
     List<CourseResponseDTO> getAllCourses();
+
+    //Read only one Course
+    CourseResponseDTO getCourseById(Long id);
+
 }
