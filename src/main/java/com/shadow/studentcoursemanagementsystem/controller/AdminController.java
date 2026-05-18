@@ -1,7 +1,7 @@
 package com.shadow.studentcoursemanagementsystem.controller;
 
-import com.sliit.scrs.dto.*;
-import com.sliit.scrs.service.AdminService;
+import com.shadow.studentcoursemanagementsystem.dto.*;
+import com.shadow.studentcoursemanagementsystem.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
