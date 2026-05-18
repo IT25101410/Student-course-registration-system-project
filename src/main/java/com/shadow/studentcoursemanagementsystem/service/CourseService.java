@@ -14,4 +14,8 @@ public interface CourseService {
     //Read only one Course
     CourseResponseDTO getCourseById(Long id);
 
+    //Update the course
+    CourseResponseDTO updateCourse(Long id , CourseResponseDTO dto);
+    
+
 }
