@@ -3,13 +3,13 @@ package com.shadow.studentcoursemanagementsystem.controller;
 
 import com.shadow.studentcoursemanagementsystem.dto.CourseRequestDTO;
 import com.shadow.studentcoursemanagementsystem.dto.CourseResponseDTO;
+import com.shadow.studentcoursemanagementsystem.repository.CourseRepository;
 import com.shadow.studentcoursemanagementsystem.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController // get HTTP Request from Frontend
@@ -19,6 +19,8 @@ public class CourseController {
     //Connect Course Service
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private CourseRepository courseRepository;
 
     // Create the new course
     @PostMapping
@@ -26,5 +28,14 @@ public class CourseController {
 
         return ResponseEntity.ok(courseService.addCourse(dto));
     }
+
+    //Read All the Course
+    @GetMapping
+    public ResponseEntity<List<CourseResponseDTO>> getAllCourses() {
+        List<CourseResponseDTO> courses = courseService.getAllCourses();
+        return ResponseEntity.ok(courses);
+    }
+
+
 
 }
