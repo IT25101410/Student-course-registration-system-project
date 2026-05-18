@@ -3,7 +3,8 @@ package com.shadow.studentcoursemanagementsystem.service.Impl;
 import com.shadow.studentcoursemanagementsystem.dto.*;
 import com.shadow.studentcoursemanagementsystem.model.Admin;
 import com.shadow.studentcoursemanagementsystem.*;
-import com.shadow.studentcoursemanagementsystem.AdminService;
+//import com.shadow.studentcoursemanagementsystem.AdminService;
+import com.shadow.studentcoursemanagementsystem.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
