@@ -1,20 +1,10 @@
 package com.shadow.studentcoursemanagementsystem.service.IMPL;
 
 
-<<<<<<< HEAD:src/main/java/com/sliit/scrs/service/IMPL/PaymentServiceImpl.java
-=======
 
-import com.shadow.studentcoursemanagementsystem.dto.PaymentRequestDTO;
-import com.shadow.studentcoursemanagementsystem.dto.PaymentResponseDTO;
-import com.shadow.studentcoursemanagementsystem.dto.UpdatePaymentStatusDTO;
-import com.shadow.studentcoursemanagementsystem.model.CashPayment;
-import com.shadow.studentcoursemanagementsystem.model.OnlinePayment;
-import com.shadow.studentcoursemanagementsystem.model.Payment;
-import com.shadow.studentcoursemanagementsystem.repository.PaymentRepository;
->>>>>>> de8a110 (Change name of Package):src/main/java/com/shadow/studentcoursemanagementsystem/service/IMPL/PaymentServiceImpl.java
-import com.sliit.scrs.dto.*;
-import com.sliit.scrs.model.*;
-import com.sliit.scrs.repository.*;
+import com.shadow.studentcoursemanagementsystem.dto.*;
+import com.shadow.studentcoursemanagementsystem.model.*;
+import com.shadow.studentcoursemanagementsystem.repository.*;
 import com.shadow.studentcoursemanagementsystem.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
