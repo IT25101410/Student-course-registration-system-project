@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Assign Course', 'lecturers', ~{::content})}">
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <h1>Assign Course</h1>
+        <a th:href="@{/lecturers}" class="btn">← Back</a>
+    </div>
+
+    <div class="card">
+        <p style="margin-bottom:1rem; color:#718096;">
+            Assigning course to:
+            <strong th:text="${lecturer.name}"></strong>
+        </p>
+
+        <form th:action="@{/lecturers/assign-course/{id}(id=${lecturer.id})}"
+              method="post">
+            <div class="form-group">
+                <label>Select course</label>
+                <select name="courseId" required>
+                    <option value="">-- Select Course --</option>
+                    <option th:each="course : ${courses}"
+                            th:value="${course.id}"
+                            th:text="${course.courseName}"
+                            th:selected="${lecturer.assignedCourseId == course.id}">
+                    </option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Assign Course
+                </button>
+                <a th:href="@{/lecturers}" class="btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</th:block>
+</body>
+</html>
