@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Lecturer Form', 'lecturers', ~{::content})}">
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <h1 th:text="${lecturer.id == null} ? 'Add Lecturer' : 'Edit Lecturer'">
+            Lecturer Form
+        </h1>
+        <a th:href="@{/lecturers}" class="btn">← Back</a>
+    </div>
+
+    <div class="card">
+        <form th:action="${lecturer.id == null} ?
+              @{/lecturers/save} : @{/lecturers/update/{id}(id=${lecturer.id})}"
+              method="post">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Full name</label>
+                    <input type="text" name="name"
+                           th:value="${lecturer.name}"
+                           placeholder="e.g. Dr. John Smith" required/>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" name="email"
+                           th:value="${lecturer.email}"
+                           placeholder="lecturer@sliit.lk" required/>
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="text" name="phone"
+                           th:value="${lecturer.phone}"
+                           placeholder="077XXXXXXX" required/>
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <input type="text" name="department"
+                           th:value="${lecturer.department}"
+                           placeholder="e.g. Computer Science" required/>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select name="type" id="lecturerType"
+                            onchange="toggleLecturerFields()">
+                        <option value="PERMANENT"
+                                th:selected="${lecturer.type == 'PERMANENT'}">
+                            Permanent
+                        </option>
+                        <option value="VISITING"
+                                th:selected="${lecturer.type == 'VISITING'}">
+                            Visiting
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group" id="yearsField">
+                    <label>Years of service</label>
+                    <input type="number" name="yearsOfService"
+                           placeholder="e.g. 10" min="0"/>
+                </div>
+                <div class="form-group" id="institutionField"
+                     style="display:none">
+                    <label>Institution</label>
+                    <input type="text" name="institution"
+                           placeholder="e.g. MIT"/>
+                </div>
+                <div class="form-group">
+                    <label>Assign course (optional)</label>
+                    <select name="courseId">
+                        <option value="">-- No course --</option>
+                        <option th:each="course : ${courses}"
+                                th:value="${course.id}"
+                                th:text="${course.courseName}"
+                                th:selected="${lecturer.assignedCourseId == course.id}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary"
+                        th:text="${lecturer.id == null} ?
+                        'Add Lecturer' : 'Update Lecturer'">
+                    Save
+                </button>
+                <a th:href="@{/lecturers}" class="btn">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+
+</th:block>
+</body>
+</html>
+
+<script>
+    function toggleLecturerFields() {
+        const type = document.getElementById('lecturerType').value;
+        document.getElementById('yearsField').style.display =
+            type === 'PERMANENT' ? 'block' : 'none';
+        document.getElementById('institutionField').style.display =
+            type === 'VISITING' ? 'block' : 'none';
+    }
+    toggleLecturerFields();
+</script>
