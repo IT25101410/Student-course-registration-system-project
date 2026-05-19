@@ -1,6 +1,6 @@
 package com.shadow.studentcoursemanagementsystem.service;
 
-import com.sliit.scrs.dto.*;
+import com.shadow.studentcoursemanagementsystem.dto.*;
 
 
 import java.util.List;
