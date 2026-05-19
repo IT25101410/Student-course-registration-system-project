@@ -1,7 +1,6 @@
 package com.shadow.studentcoursemanagementsystem.dto;
 
 import lombok.*;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
