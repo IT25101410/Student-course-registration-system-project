@@ -1,0 +1,1498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Payments - SCMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet"/>
+    <style>
+        :root {
+            --brand:        #5b5bd6;
+            --brand-light:  #ededfc;
+            --brand-dark:   #3d3d9e;
+            --accent:       #e87040;
+            --surface:      #ffffff;
+            --surface-2:    #f7f7fb;
+            --border:       rgba(91,91,214,.13);
+            --border-solid: #e8e8f4;
+            --text:         #1a1a2e;
+            --text-muted:   #6b6b8a;
+            --success:      #22c55e;
+            --danger:       #ef4444;
+            --danger-light: #fef2f2;
+            --warning:      #f59e0b;
+            --warning-light:#fffbeb;
+            --info:         #3b82f6;
+            --info-light:   #eff6ff;
+            --sidebar-width: 260px;
+            --transition:   cubic-bezier(.4,0,.2,1);
+            --payment-green: #059669;
+            --payment-green-light: #ecfdf5;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+            background: var(--surface-2);
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ── Sidebar ── */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border-solid);
+            position: fixed;
+            left: 0;
+            top: 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            box-shadow: 2px 0 20px rgba(91,91,214,.05);
+        }
+
+        .sidebar-logo {
+            padding: 1.75rem 1.5rem;
+            border-bottom: 1px solid var(--border-solid);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-logo-icon {
+            width: 38px;
+            height: 38px;
+            background: var(--payment-green);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .sidebar-logo-text {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--text);
+            letter-spacing: -0.02em;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 1.25rem 0.75rem;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.25rem;
+            border-radius: 10px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s var(--transition);
+            cursor: pointer;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        .sidebar-nav-item:hover {
+            background: var(--surface-2);
+            color: var(--text);
+        }
+
+        .sidebar-nav-item.active {
+            background: var(--payment-green-light);
+            color: var(--payment-green);
+            font-weight: 600;
+        }
+
+        .sidebar-nav-item svg {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-section {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            padding: 1rem 1rem 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 0.75rem;
+            border-top: 1px solid var(--border-solid);
+        }
+
+        .sidebar-user {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .sidebar-user:hover {
+            background: var(--surface-2);
+        }
+
+        .sidebar-user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--payment-green-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 0.75rem;
+            color: var(--payment-green);
+        }
+
+        .sidebar-user-info {
+            flex: 1;
+        }
+
+        .sidebar-user-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .sidebar-user-role {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Hamburger Menu ── */
+        .hamburger {
+            display: none;
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 100;
+            background: var(--surface);
+            border: 1px solid var(--border-solid);
+            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .hamburger span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .hamburger span::before,
+        .hamburger span::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 2px;
+            background: var(--text);
+            transition: all 0.3s;
+        }
+
+        .hamburger span::before { top: -6px; }
+        .hamburger span::after { top: 6px; }
+
+        /* ── Main Content ── */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+        }
+
+        /* ── Page ── */
+        .sl-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 2rem 4rem;
+            opacity: 0;
+            transform: translateY(18px);
+            animation: sl-fadein .5s var(--transition) .08s forwards;
+        }
+
+        /* ── Header ── */
+        .sl-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .sl-title-block { display: flex; align-items: center; gap: 14px; }
+
+        .sl-icon-wrap {
+            width: 48px; height: 48px;
+            border-radius: 14px;
+            background: var(--payment-green);
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 6px 20px rgba(5,150,105,.35);
+            position: relative; overflow: hidden;
+            flex-shrink: 0;
+        }
+        .sl-icon-wrap::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,.2), transparent);
+        }
+        .sl-icon-wrap svg { width: 24px; height: 24px; color: #fff; position: relative; z-index: 1; }
+
+        .sl-heading {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.5rem; font-weight: 700;
+            color: var(--text); letter-spacing: -.02em;
+        }
+        .sl-sub { font-size: .82rem; color: var(--text-muted); margin-top: 2px; }
+
+        .sl-btn-add {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: .65rem 1.4rem;
+            border-radius: 100px; border: none; cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .88rem; font-weight: 600; color: #fff;
+            background: var(--payment-green);
+            box-shadow: 0 6px 20px rgba(5,150,105,.32);
+            text-decoration: none;
+            transition: all .2s var(--transition);
+            position: relative; overflow: hidden;
+        }
+        .sl-btn-add::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg,rgba(255,255,255,.15),transparent);
+        }
+        .sl-btn-add:hover {
+            background: #047857;
+            box-shadow: 0 8px 28px rgba(5,150,105,.42);
+            transform: translateY(-2px);
+        }
+        .sl-btn-add svg { width: 18px; height: 18px; position: relative; }
+
+        /* ── Alert Messages ── */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: none;
+        }
+        .alert.show { display: block; }
+        .alert-success {
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+        .alert-danger {
+            background: var(--danger-light);
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* ── Stats row ── */
+        .sl-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 1.75rem;
+        }
+        .sl-stat {
+            background: var(--surface);
+            border: 1px solid var(--border-solid);
+            border-radius: 16px;
+            padding: 1.1rem 1.25rem;
+            display: flex; align-items: center; gap: 14px;
+            animation: sl-rise .4s var(--transition) both;
+        }
+        .sl-stat:nth-child(1){animation-delay:.05s}
+        .sl-stat:nth-child(2){animation-delay:.10s}
+        .sl-stat:nth-child(3){animation-delay:.15s}
+        .sl-stat:nth-child(4){animation-delay:.20s}
+
+        .sl-stat-icon {
+            width: 42px; height: 42px; border-radius: 11px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .sl-stat-icon svg { width: 20px; height: 20px; }
+        .sl-stat-icon.green  { background: #ecfdf5; color: var(--payment-green); }
+        .sl-stat-icon.blue   { background: #e0f2fe; color: #0284c7; }
+        .sl-stat-icon.amber  { background: var(--warning-light); color: var(--warning); }
+        .sl-stat-icon.red    { background: var(--danger-light); color: var(--danger); }
+
+        .sl-stat-val {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.45rem; font-weight: 700; color: var(--text);
+            line-height: 1;
+        }
+        .sl-stat-lbl { font-size: .75rem; color: var(--text-muted); margin-top: 3px; }
+
+        /* ── Card ── */
+        .sl-card {
+            background: var(--surface);
+            border-radius: 22px;
+            border: 1px solid var(--border-solid);
+            box-shadow: 0 8px 32px rgba(91,91,214,.09);
+            overflow: hidden;
+            animation: sl-rise .45s var(--transition) .2s both;
+        }
+
+        .sl-card-accent {
+            height: 4px;
+            background: linear-gradient(90deg, var(--payment-green), #34d399);
+        }
+
+        /* ── Toolbar ── */
+        .sl-toolbar {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid var(--border-solid);
+            background: var(--surface-2);
+            gap: 1rem; flex-wrap: wrap;
+        }
+
+        .sl-search-wrap { position: relative; }
+        .sl-search-icon {
+            position: absolute; left: 11px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); display: flex; align-items: center;
+        }
+        .sl-search-icon svg { width: 15px; height: 15px; }
+        .sl-search {
+            height: 38px; padding: 0 14px 0 34px;
+            border: 1.5px solid var(--border-solid);
+            border-radius: 100px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: .84rem; color: var(--text);
+            background: var(--surface); outline: none;
+            width: 220px;
+            transition: all .2s var(--transition);
+        }
+        .sl-search::placeholder { color: #b0b0c8; }
+        .sl-search:focus { border-color: var(--payment-green); box-shadow: 0 0 0 3px rgba(5,150,105,.1); width: 260px; }
+
+        .sl-filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+        .sl-pill {
+            padding: .32rem .85rem;
+            border-radius: 100px;
+            border: 1.5px solid var(--border-solid);
+            font-size: .76rem; font-weight: 500; color: var(--text-muted);
+            background: var(--surface); cursor: pointer;
+            transition: all .18s var(--transition);
+        }
+        .sl-pill:hover  { border-color: var(--payment-green); color: var(--payment-green); }
+        .sl-pill.active { background: #ecfdf5; border-color: var(--payment-green); color: var(--payment-green); }
+
+        /* ── Table ── */
+        .sl-table-wrap { overflow-x: auto; }
+        table {
+            width: 100%; border-collapse: collapse;
+        }
+        thead tr {
+            background: var(--surface-2);
+            border-bottom: 1px solid var(--border-solid);
+        }
+        th {
+            padding: .8rem 1.25rem;
+            font-family: 'Syne', sans-serif;
+            font-size: .68rem; font-weight: 700;
+            letter-spacing: .08em; text-transform: uppercase;
+            color: var(--text-muted); text-align: left;
+            white-space: nowrap;
+        }
+        th.right { text-align: right; }
+        th.center { text-align: center; }
+
+        tbody tr {
+            border-bottom: 1px solid var(--border-solid);
+            transition: background .15s;
+        }
+        tbody tr:last-child { border-bottom: none; }
+        tbody tr:hover { background: #fafafd; }
+
+        td {
+            padding: 1rem 1.25rem;
+            font-size: .875rem; color: var(--text);
+            vertical-align: middle;
+        }
+        td.right { text-align: right; }
+        td.center { text-align: center; }
+
+        /* ID cell */
+        .td-id {
+            font-family: 'Syne', sans-serif;
+            font-size: .78rem; font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        /* Student name */
+        .td-name { display: flex; align-items: center; gap: 10px; }
+        .td-avatar {
+            width: 36px; height: 36px; border-radius: 10px;
+            background: var(--payment-green-light);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif;
+            font-size: .72rem; font-weight: 700; color: var(--payment-green);
+            flex-shrink: 0;
+        }
+        .td-name-text { font-weight: 500; }
+
+        /* Amount */
+        .td-amount {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700; font-size: .9rem;
+            color: var(--payment-green);
+        }
+        .td-amount span { font-size: .7rem; color: var(--text-muted); font-weight: 400; margin-right: 2px; }
+
+        /* Date */
+        .td-date { font-size: .84rem; color: var(--text-muted); }
+
+        /* Summary */
+        .td-summary {
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: .83rem;
+            color: var(--text-muted);
+        }
+
+        /* Type badge */
+        .badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: .28rem .75rem;
+            border-radius: 100px;
+            font-size: .73rem; font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .badge-online {
+            background: #eff6ff; color: #1e40af;
+        }
+        .badge-online .badge-dot { background: #3b82f6; }
+        .badge-cash {
+            background: var(--warning-light); color: #92400e;
+        }
+        .badge-cash .badge-dot { background: #f59e0b; }
+
+        /* Status badge */
+        .badge-status {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: .28rem .75rem;
+            border-radius: 100px;
+            font-size: .73rem; font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-status.completed {
+            background: #f0fdf4; color: #166534;
+        }
+        .badge-status.completed .badge-dot { background: #22c55e; }
+        .badge-status.pending {
+            background: var(--warning-light); color: #92400e;
+        }
+        .badge-status.pending .badge-dot { background: #f59e0b; }
+        .badge-status.failed {
+            background: var(--danger-light); color: #991b1b;
+        }
+        .badge-status.failed .badge-dot { background: #ef4444; }
+
+        /* Action buttons */
+        .td-actions { display: flex; align-items: center; gap: 7px; }
+
+        .btn-status {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: .38rem .9rem;
+            border-radius: 100px;
+            border: 1.5px solid rgba(5,150,105,.3);
+            background: #ecfdf5;
+            color: var(--payment-green);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .76rem; font-weight: 600;
+            cursor: pointer; text-decoration: none;
+            transition: all .18s var(--transition);
+        }
+        .btn-status svg { width: 13px; height: 13px; }
+        .btn-status:hover {
+            background: var(--payment-green); color: #fff;
+            border-color: var(--payment-green);
+            box-shadow: 0 4px 12px rgba(5,150,105,.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: .38rem .9rem;
+            border-radius: 100px;
+            border: 1.5px solid rgba(239,68,68,.25);
+            background: var(--danger-light);
+            color: var(--danger);
+            font-family: 'DM Sans', sans-serif;
+            font-size: .76rem; font-weight: 600;
+            cursor: pointer; text-decoration: none;
+            transition: all .18s var(--transition);
+        }
+        .btn-delete svg { width: 13px; height: 13px; }
+        .btn-delete:hover {
+            background: var(--danger); color: #fff;
+            border-color: var(--danger);
+            box-shadow: 0 4px 12px rgba(239,68,68,.28);
+            transform: translateY(-1px);
+        }
+
+        /* ── Empty state ── */
+        .sl-empty {
+            display: none;
+            flex-direction: column; align-items: center;
+            padding: 4rem 2rem; text-align: center;
+        }
+        .sl-empty.show { display: flex; }
+        .sl-empty-icon {
+            width: 64px; height: 64px; border-radius: 18px;
+            background: var(--surface-2);
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .sl-empty-icon svg { width: 28px; height: 28px; color: var(--text-muted); }
+        .sl-empty h3 { font-family:'Syne',sans-serif; font-size:1rem; font-weight:600; margin-bottom:4px; }
+        .sl-empty p  { font-size:.83rem; color:var(--text-muted); }
+
+        /* ── Footer ── */
+        .sl-footer {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: .85rem 1.5rem;
+            border-top: 1px solid var(--border-solid);
+            background: var(--surface-2);
+            font-size: .78rem; color: var(--text-muted);
+        }
+
+        /* ── Overlay & Modal ── */
+        .sl-overlay {
+            display: none;
+            position: fixed; inset: 0;
+            background: rgba(26,26,46,.45);
+            backdrop-filter: blur(3px);
+            z-index: 100;
+            align-items: center; justify-content: center;
+        }
+        .sl-overlay.show { display: flex; }
+        .sl-modal {
+            background: var(--surface);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 380px; width: 90%;
+            box-shadow: 0 24px 64px rgba(26,26,46,.25);
+            animation: sl-modal-in .25s var(--transition);
+        }
+        .sl-modal-icon {
+            width: 52px; height: 52px; border-radius: 14px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1.1rem;
+        }
+        .sl-modal-icon.danger { background: var(--danger-light); }
+        .sl-modal-icon.danger svg { width: 24px; height: 24px; color: var(--danger); }
+        .sl-modal-icon.info { background: #ecfdf5; }
+        .sl-modal-icon.info svg { width: 24px; height: 24px; color: var(--payment-green); }
+        .sl-modal h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;
+        }
+        .sl-modal p { font-size: .85rem; color: var(--text-muted); line-height: 1.6; }
+        .sl-modal-actions { display: flex; gap: 8px; margin-top: 1.5rem; }
+        .sl-modal-cancel {
+            flex: 1; padding: .7rem;
+            border-radius: 100px; border: 1.5px solid var(--border-solid);
+            font-family: 'DM Sans', sans-serif; font-size: .86rem; font-weight: 500;
+            color: var(--text-muted); background: transparent; cursor: pointer;
+            transition: all .18s;
+        }
+        .sl-modal-cancel:hover { border-color: #c0c0e0; color: var(--text); }
+        .sl-modal-confirm {
+            flex: 1; padding: .7rem;
+            border-radius: 100px; border: none;
+            font-family: 'DM Sans', sans-serif; font-size: .86rem; font-weight: 600;
+            color: #fff; cursor: pointer;
+            transition: all .18s;
+        }
+        .sl-modal-confirm.danger {
+            background: var(--danger);
+            box-shadow: 0 4px 14px rgba(239,68,68,.3);
+        }
+        .sl-modal-confirm.danger:hover { background: #dc2626; }
+        .sl-modal-confirm.success {
+            background: var(--payment-green);
+            box-shadow: 0 4px 14px rgba(5,150,105,.3);
+        }
+        .sl-modal-confirm.success:hover { background: #047857; }
+
+        /* Status Update Modal */
+        .status-modal {
+            max-width: 450px;
+            width: 90%;
+        }
+        .status-options {
+            display: flex;
+            gap: 10px;
+            margin: 1rem 0;
+        }
+        .status-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border-solid);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        .status-option:hover {
+            border-color: var(--payment-green);
+            background: #ecfdf5;
+        }
+        .status-option.selected {
+            border-color: var(--payment-green);
+            background: #ecfdf5;
+            color: var(--payment-green);
+        }
+        .status-option.completed-opt { color: #166534; }
+        .status-option.pending-opt { color: #92400e; }
+        .status-option.failed-opt { color: #991b1b; }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(34,197,94,.3);
+            transform: translateX(120%);
+            transition: transform 0.3s var(--transition);
+            z-index: 200;
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        /* Row animation */
+        tbody tr {
+            opacity: 0;
+            animation: sl-row-in .35s var(--transition) forwards;
+        }
+
+        /* Keyframes */
+        @keyframes sl-fadein {
+            to { opacity:1; transform:translateY(0); }
+        }
+        @keyframes sl-rise {
+            from { opacity:0; transform:translateY(14px); }
+            to   { opacity:1; transform:translateY(0); }
+        }
+        @keyframes sl-row-in {
+            from { opacity:0; transform:translateX(-10px); }
+            to   { opacity:1; transform:translateX(0); }
+        }
+        @keyframes sl-modal-in {
+            from { opacity:0; transform:scale(.93) translateY(12px); }
+            to   { opacity:1; transform:scale(1)   translateY(0); }
+        }
+
+        /* Sidebar overlay for mobile */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(26,26,46,.45);
+            z-index: 40;
+        }
+        .sidebar-overlay.show { display: block; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s var(--transition);
+            }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .hamburger { display: flex; }
+            .sl-page { padding: 2rem 1.5rem 4rem; }
+        }
+
+        @media (max-width: 768px) {
+            .sl-stats { grid-template-columns: 1fr 1fr; }
+            .sl-search { width: 100%; }
+            .sl-search:focus { width: 100%; }
+            .sl-toolbar { flex-direction: column; align-items: stretch; }
+            .status-options { flex-direction: column; }
+        }
+
+        @media (max-width: 640px) {
+            .sl-stats { grid-template-columns: 1fr; }
+            .sl-page { padding: 2rem 1rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hamburger Menu for Mobile -->
+<button class="hamburger" id="hamburger" onclick="toggleSidebar()">
+    <span></span>
+</button>
+
+<!-- Sidebar Overlay for Mobile -->
+<div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- Sidebar -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">S</div>
+        <div class="sidebar-logo-text">SCMS</div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-nav-section">Main Menu</div>
+
+        <a href="dashboard.html" class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+            </svg>
+            Dashboard
+        </a>
+
+        <a href="students.html" class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Students
+        </a>
+
+        <a href="courses.html" class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+            </svg>
+            Courses
+        </a>
+
+        <div class="sidebar-nav-section">Management</div>
+
+        <a href="#" class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                <circle cx="8.5" cy="7" r="4"/>
+                <polyline points="17 11 19 13 23 9"/>
+            </svg>
+            Enrollments
+        </a>
+
+        <a href="#" class="sidebar-nav-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+            </svg>
+            Lecturers
+        </a>
+
+        <a href="payments.html" class="sidebar-nav-item active">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"/>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Payments
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">AD</div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">Admin User</div>
+                <div class="sidebar-user-role">Administrator</div>
+            </div>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted);">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+        </div>
+    </div>
+</aside>
+
+<!-- Main Content -->
+<div class="main-content">
+
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <div class="sl-page">
+
+        <!-- Alert Messages -->
+        <div class="alert alert-success" id="success-alert"></div>
+        <div class="alert alert-danger" id="error-alert"></div>
+
+        <!-- Header -->
+        <div class="sl-header">
+            <div class="sl-title-block">
+                <div class="sl-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="sl-heading">Payments</h1>
+                    <p class="sl-sub">Manage all payment transactions</p>
+                </div>
+            </div>
+            <button class="sl-btn-add" onclick="openAddModal()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+                Add Payment
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="sl-stats">
+            <div class="sl-stat">
+                <div class="sl-stat-icon green">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23"/>
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="sl-stat-val" id="stat-total">0</div>
+                    <div class="sl-stat-lbl">Total Payments</div>
+                </div>
+            </div>
+            <div class="sl-stat">
+                <div class="sl-stat-icon blue">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="sl-stat-val" id="stat-completed">0</div>
+                    <div class="sl-stat-lbl">Completed</div>
+                </div>
+            </div>
+            <div class="sl-stat">
+                <div class="sl-stat-icon amber">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="sl-stat-val" id="stat-pending">0</div>
+                    <div class="sl-stat-lbl">Pending</div>
+                </div>
+            </div>
+            <div class="sl-stat">
+                <div class="sl-stat-icon red">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="15" y1="9" x2="9" y2="15"/>
+                        <line x1="9" y1="9" x2="15" y2="15"/>
+                    </svg>
+                </div>
+                <div>
+                    <div class="sl-stat-val" id="stat-failed">0</div>
+                    <div class="sl-stat-lbl">Failed</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table card -->
+        <div class="sl-card">
+            <div class="sl-card-accent"></div>
+
+            <!-- Toolbar -->
+            <div class="sl-toolbar">
+                <div class="sl-search-wrap">
+                <span class="sl-search-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </span>
+                    <input class="sl-search" type="text" placeholder="Search payments…" id="sl-search" oninput="filterRows()"/>
+                </div>
+                <div class="sl-filter-pills">
+                    <button class="sl-pill active" onclick="setFilter('all',this)">All</button>
+                    <button class="sl-pill" onclick="setFilter('COMPLETED',this)">Completed</button>
+                    <button class="sl-pill" onclick="setFilter('PENDING',this)">Pending</button>
+                    <button class="sl-pill" onclick="setFilter('FAILED',this)">Failed</button>
+                    <button class="sl-pill" onclick="setFilter('ONLINE',this)">Online</button>
+                    <button class="sl-pill" onclick="setFilter('CASH',this)">Cash</button>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="sl-table-wrap">
+                <table id="sl-table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Student</th>
+                        <th class="right">Amount (LKR)</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Summary</th>
+                        <th class="right">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="sl-tbody">
+                    </tbody>
+                </table>
+
+                <!-- Empty state -->
+                <div class="sl-empty" id="sl-empty">
+                    <div class="sl-empty-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                    </div>
+                    <h3>No payments found</h3>
+                    <p>Try adjusting your search or filter.</p>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="sl-footer">
+                <span id="sl-count">Showing 0 of 0 payments</span>
+                <span id="sl-last-updated">Last updated: Never</span>
+            </div>
+        </div>
+
+    </div><!-- /sl-page -->
+</div><!-- /main-content -->
+
+<!-- Delete confirm modal -->
+<div class="sl-overlay" id="sl-overlay">
+    <div class="sl-modal">
+        <div class="sl-modal-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+            </svg>
+        </div>
+        <h3>Delete payment?</h3>
+        <p>Are you sure you want to delete payment from <strong id="modal-name"></strong>? This action cannot be undone.</p>
+        <div class="sl-modal-actions">
+            <button class="sl-modal-cancel" onclick="closeModal()">Cancel</button>
+            <button class="sl-modal-confirm danger" id="modal-confirm">Yes, delete</button>
+        </div>
+    </div>
+</div>
+
+<!-- Status Update Modal -->
+<div class="sl-overlay" id="status-overlay">
+    <div class="sl-modal status-modal">
+        <div class="sl-modal-icon info">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+        <h3>Update Payment Status</h3>
+        <p>Select new status for payment from <strong id="status-student-name"></strong></p>
+        <div class="status-options">
+            <div class="status-option completed-opt" onclick="selectStatus('COMPLETED', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="margin-bottom:4px"><polyline points="20 6 9 17 4 12"/></svg>
+                <div>Completed</div>
+            </div>
+            <div class="status-option pending-opt" onclick="selectStatus('PENDING', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="margin-bottom:4px"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+                <div>Pending</div>
+            </div>
+            <div class="status-option failed-opt" onclick="selectStatus('FAILED', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="24" height="24" style="margin-bottom:4px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                <div>Failed</div>
+            </div>
+        </div>
+        <input type="hidden" id="selected-status" value="">
+        <input type="hidden" id="status-payment-id" value="">
+        <div class="sl-modal-actions">
+            <button class="sl-modal-cancel" onclick="closeStatusModal()">Cancel</button>
+            <button class="sl-modal-confirm success" id="status-confirm">Update Status</button>
+        </div>
+    </div>
+</div>
+
+<!-- Add Payment Modal -->
+<div class="sl-overlay" id="form-overlay">
+    <div class="sl-modal form-modal">
+        <h3 id="form-title">Add New Payment</h3>
+        <form id="payment-form" onsubmit="savePayment(event)">
+            <input type="hidden" id="payment-id" value="">
+            <div class="form-group">
+                <label for="payment-student">Student Name</label>
+                <select id="payment-student" required>
+                    <option value="">Select student...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment-amount">Amount (LKR)</label>
+                <input type="number" id="payment-amount" required placeholder="Enter amount" min="0">
+            </div>
+            <div class="form-group">
+                <label for="payment-type">Payment Type</label>
+                <select id="payment-type" required>
+                    <option value="ONLINE">Online</option>
+                    <option value="CASH">Cash</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment-date">Payment Date</label>
+                <input type="date" id="payment-date" required>
+            </div>
+            <div class="form-group">
+                <label for="payment-status">Status</label>
+                <select id="payment-status" required>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="FAILED">Failed</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="payment-summary">Summary</label>
+                <textarea id="payment-summary" required placeholder="Payment description..."></textarea>
+            </div>
+            <div class="sl-modal-actions">
+                <button type="button" class="sl-modal-cancel" onclick="closeFormModal()">Cancel</button>
+                <button type="submit" class="btn-submit" style="background:var(--payment-green);box-shadow:0 4px 14px rgba(5,150,105,.3);">Save Payment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    .form-modal {
+        max-width: 550px;
+        width: 90%;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    .form-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 0.7rem;
+        border: 1.5px solid var(--border-solid);
+        border-radius: 10px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: var(--surface);
+        transition: border-color 0.2s;
+        resize: vertical;
+    }
+    .form-group textarea { min-height: 70px; }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--payment-green);
+        box-shadow: 0 0 0 3px rgba(5,150,105,.1);
+    }
+    .btn-submit {
+        flex: 1;
+        padding: 0.7rem;
+        color: white;
+        border: none;
+        border-radius: 100px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.86rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-submit:hover { transform: translateY(-1px); }
+</style>
+
+<script>
+    // ── Sidebar Toggle ──
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('sidebar-overlay');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
+    }
+
+    document.querySelectorAll('.sidebar-nav-item').forEach(item => {
+        item.addEventListener('click', () => {
+            if (window.innerWidth <= 1024) toggleSidebar();
+        });
+    });
+
+    // ── LocalStorage Keys ──
+    const STORAGE_KEY = 'scms_payments';
+    const NEXT_ID_KEY = 'scms_payments_next_id';
+
+    // ── Load data ──
+    function loadPayments() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) return JSON.parse(saved);
+        const defaultPayments = [
+            { id: 1, studentName: 'John Updated', amount: 75000, type: 'ONLINE', paymentDate: '2026-05-01', status: 'COMPLETED', paymentSummary: 'Tuition fee - Semester 1' },
+            { id: 2, studentName: 'Jane Doe', amount: 120000, type: 'CASH', paymentDate: '2026-05-03', status: 'COMPLETED', paymentSummary: 'Tuition fee - Full year' },
+            { id: 3, studentName: 'John Updated', amount: 25000, type: 'ONLINE', paymentDate: '2026-05-10', status: 'PENDING', paymentSummary: 'Lab fee payment' },
+            { id: 4, studentName: 'Jane Doe', amount: 15000, type: 'ONLINE', paymentDate: '2026-04-28', status: 'FAILED', paymentSummary: 'Library fee - Payment declined' }
+        ];
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(defaultPayments));
+        return defaultPayments;
+    }
+
+    function loadNextId() {
+        const saved = localStorage.getItem(NEXT_ID_KEY);
+        if (saved) return parseInt(saved);
+        const nextId = 5;
+        localStorage.setItem(NEXT_ID_KEY, nextId.toString());
+        return nextId;
+    }
+
+    // ── Save data ──
+    function saveToStorage() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payments));
+        localStorage.setItem(NEXT_ID_KEY, nextId.toString());
+        updateLastUpdated();
+    }
+
+    // ── Initialize ──
+    let payments = loadPayments();
+    let nextId = loadNextId();
+    let activeFilter = 'all';
+    let editingId = null;
+    let pendingDeleteId = null;
+    let pendingStatusId = null;
+    let selectedNewStatus = '';
+
+    // ── Show notification ──
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        notification.textContent = message;
+        notification.style.background = type === 'success' ? 'var(--success)' : 'var(--danger)';
+        notification.classList.add('show');
+        setTimeout(() => notification.classList.remove('show'), 3000);
+    }
+
+    // ── Show alert ──
+    function showAlert(message, type = 'success') {
+        const alertId = type === 'success' ? 'success-alert' : 'error-alert';
+        const alert = document.getElementById(alertId);
+        alert.textContent = message;
+        alert.classList.add('show');
+        setTimeout(() => alert.classList.remove('show'), 5000);
+    }
+
+    // ── Update timestamp ──
+    function updateLastUpdated() {
+        const now = new Date();
+        const timeString = now.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short', year: 'numeric' });
+        document.getElementById('sl-last-updated').textContent = `Last updated: ${timeString}`;
+        localStorage.setItem('scms_payments_last_updated', timeString);
+    }
+
+    // ── Get students for dropdown ──
+    function getStudents() {
+        const data = localStorage.getItem('student_management_students');
+        return data ? JSON.parse(data) : [];
+    }
+
+    // ── Render payments ──
+    function renderPayments() {
+        const tbody = document.getElementById('sl-tbody');
+        tbody.innerHTML = '';
+
+        payments.forEach((payment, index) => {
+            const initials = payment.studentName.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+            const typeClass = payment.type === 'ONLINE' ? 'badge-online' : 'badge-cash';
+            const typeLabel = payment.type === 'ONLINE' ? 'Online' : 'Cash';
+            const statusClass = payment.status.toLowerCase();
+            const statusLabel = payment.status.charAt(0) + payment.status.slice(1).toLowerCase();
+
+            const row = document.createElement('tr');
+            row.setAttribute('data-status', payment.status);
+            row.setAttribute('data-type', payment.type);
+            row.setAttribute('data-name', payment.studentName);
+            row.setAttribute('data-id', payment.id);
+            row.style.animationDelay = `${index * 0.08}s`;
+
+            row.innerHTML = `
+                <td><span class="td-id">#${payment.id}</span></td>
+                <td>
+                    <div class="td-name">
+                        <div class="td-avatar">${initials}</div>
+                        <span class="td-name-text">${payment.studentName}</span>
+                    </div>
+                </td>
+                <td class="right"><span class="td-amount"><span>LKR</span>${payment.amount.toLocaleString()}</span></td>
+                <td><span class="badge ${typeClass}"><span class="badge-dot"></span>${typeLabel}</span></td>
+                <td><span class="td-date">${payment.paymentDate}</span></td>
+                <td><span class="badge-status ${statusClass}"><span class="badge-dot"></span>${statusLabel}</span></td>
+                <td><span class="td-summary" title="${payment.paymentSummary}">${payment.paymentSummary}</span></td>
+                <td class="right">
+                    <div class="td-actions">
+                        <button class="btn-status" onclick="openStatusModal(${payment.id})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Status
+                        </button>
+                        <button class="btn-delete" onclick="confirmDelete(${payment.id}, '${payment.studentName.replace(/'/g, "\\'")}')">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                <path d="M10 11v6M14 11v6"/>
+                                <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                            </svg>
+                            Del
+                        </button>
+                    </div>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+        filterRows();
+        recalcStats();
+    }
+
+    // ── Populate student dropdown ──
+    function populateStudentDropdown() {
+        const students = getStudents();
+        const select = document.getElementById('payment-student');
+        select.innerHTML = '<option value="">Select student...</option>';
+        students.forEach(s => {
+            select.innerHTML += `<option value="${s.name}">${s.name}</option>`;
+        });
+        if (students.length === 0) {
+            select.innerHTML += '<option value="John Updated">John Updated</option>';
+            select.innerHTML += '<option value="Jane Doe">Jane Doe</option>';
+        }
+    }
+
+    // ── Add payment ──
+    function openAddModal() {
+        editingId = null;
+        document.getElementById('form-title').textContent = 'Add New Payment';
+        document.getElementById('payment-id').value = '';
+        populateStudentDropdown();
+        document.getElementById('payment-amount').value = '';
+        document.getElementById('payment-type').value = 'ONLINE';
+        document.getElementById('payment-date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('payment-status').value = 'COMPLETED';
+        document.getElementById('payment-summary').value = '';
+        document.getElementById('form-overlay').classList.add('show');
+    }
+
+    // ── Close form ──
+    function closeFormModal() {
+        document.getElementById('form-overlay').classList.remove('show');
+        editingId = null;
+    }
+
+    // ── Save payment ──
+    function savePayment(event) {
+        event.preventDefault();
+        const studentName = document.getElementById('payment-student').value;
+        const amount = parseInt(document.getElementById('payment-amount').value);
+        const type = document.getElementById('payment-type').value;
+        const paymentDate = document.getElementById('payment-date').value;
+        const status = document.getElementById('payment-status').value;
+        const paymentSummary = document.getElementById('payment-summary').value.trim();
+
+        if (!studentName || isNaN(amount) || !paymentDate || !paymentSummary) {
+            showAlert('Please fill all fields correctly', 'error');
+            return;
+        }
+
+        payments.push({ id: nextId, studentName, amount, type, paymentDate, status, paymentSummary });
+        nextId++;
+        saveToStorage();
+        closeFormModal();
+        renderPayments();
+        showNotification('Payment added successfully! ✓');
+    }
+
+    // ── Status update ──
+    function openStatusModal(id) {
+        const payment = payments.find(p => p.id === id);
+        if (!payment) return;
+        pendingStatusId = id;
+        selectedNewStatus = '';
+        document.getElementById('status-student-name').textContent = payment.studentName;
+        document.getElementById('selected-status').value = '';
+        document.querySelectorAll('.status-option').forEach(o => o.classList.remove('selected'));
+        document.getElementById('status-overlay').classList.add('show');
+    }
+
+    function selectStatus(status, el) {
+        selectedNewStatus = status;
+        document.querySelectorAll('.status-option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('selected-status').value = status;
+    }
+
+    function closeStatusModal() {
+        document.getElementById('status-overlay').classList.remove('show');
+        pendingStatusId = null;
+        selectedNewStatus = '';
+    }
+
+    document.getElementById('status-confirm').addEventListener('click', function() {
+        if (pendingStatusId && selectedNewStatus) {
+            const payment = payments.find(p => p.id === pendingStatusId);
+            if (payment) {
+                payment.status = selectedNewStatus;
+                saveToStorage();
+                renderPayments();
+                showNotification(`Payment status updated to ${selectedNewStatus}! ✓`);
+            }
+        }
+        closeStatusModal();
+    });
+
+    // ── Delete payment ──
+    function confirmDelete(id, name) {
+        pendingDeleteId = id;
+        document.getElementById('modal-name').textContent = name;
+        document.getElementById('sl-overlay').classList.add('show');
+    }
+
+    function closeModal() {
+        document.getElementById('sl-overlay').classList.remove('show');
+        pendingDeleteId = null;
+    }
+
+    document.getElementById('modal-confirm').addEventListener('click', function() {
+        if (pendingDeleteId !== null) {
+            payments = payments.filter(p => p.id !== pendingDeleteId);
+            saveToStorage();
+            renderPayments();
+            showNotification('Payment deleted successfully! ✓');
+            closeModal();
+        }
+    });
+
+    // ── Filter ──
+    function setFilter(type, btn) {
+        activeFilter = type;
+        document.querySelectorAll('.sl-pill').forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        filterRows();
+    }
+
+    // ── Search + filter ──
+    function filterRows() {
+        const q = document.getElementById('sl-search').value.toLowerCase().trim();
+        const rows = document.querySelectorAll('#sl-tbody tr');
+        let visible = 0;
+
+        rows.forEach(row => {
+            const name = row.dataset.name.toLowerCase();
+            const status = row.dataset.status;
+            const type = row.dataset.type;
+            const matchSearch = !q || name.includes(q);
+            const matchFilter = activeFilter === 'all' || status === activeFilter || type === activeFilter;
+            const show = matchSearch && matchFilter;
+            row.style.display = show ? '' : 'none';
+            if (show) visible++;
+        });
+
+        const total = payments.length;
+        document.getElementById('sl-count').textContent = `Showing ${visible} of ${total} payment${total !== 1 ? 's' : ''}`;
+        document.getElementById('sl-empty').classList.toggle('show', visible === 0);
+    }
+
+    // ── Recalculate stats ──
+    function recalcStats() {
+        const total = payments.length;
+        const completed = payments.filter(p => p.status === 'COMPLETED').length;
+        const pending = payments.filter(p => p.status === 'PENDING').length;
+        const failed = payments.filter(p => p.status === 'FAILED').length;
+        document.getElementById('stat-total').textContent = total;
+        document.getElementById('stat-completed').textContent = completed;
+        document.getElementById('stat-pending').textContent = pending;
+        document.getElementById('stat-failed').textContent = failed;
+    }
+
+    // ── Close modals on backdrop ──
+    document.getElementById('sl-overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+    document.getElementById('status-overlay').addEventListener('click', function(e) { if (e.target === this) closeStatusModal(); });
+    document.getElementById('form-overlay').addEventListener('click', function(e) { if (e.target === this) closeFormModal(); });
+
+    // ── Escape key ──
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { closeModal(); closeStatusModal(); closeFormModal(); }
+    });
+
+    // ── Initialize last updated ──
+    const lastUpdated = localStorage.getItem('scms_payments_last_updated');
+    if (lastUpdated) document.getElementById('sl-last-updated').textContent = `Last updated: ${lastUpdated}`;
+
+    // ── Initial render ──
+    renderPayments();
+</script>
+</body>
+</html>
