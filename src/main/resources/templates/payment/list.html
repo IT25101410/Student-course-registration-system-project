@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Payment Management • SCMS</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            /* Rose/Blossom Color Scheme */
+            --brand: #e11d48;
+            --brand-dark: #be123c;
+            --brand-light: rgba(225, 29, 72, 0.08);
+            --brand-glow: rgba(225, 29, 72, 0.3);
+            --accent: #fb7185;
+            --accent-glow: rgba(251, 113, 133, 0.4);
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.3);
+            --danger: #ef4444;
+            --danger-light: rgba(239, 68, 68, 0.08);
+            --danger-glow: rgba(239, 68, 68, 0.3);
+            --warning: #f59e0b;
+            --warning-light: rgba(245, 158, 11, 0.12);
+            --warning-glow: rgba(245, 158, 11, 0.3);
+            --surface: #ffffff;
+            --surface-glass: rgba(255, 255, 255, 0.75);
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --gradient-primary: linear-gradient(135deg, #e11d48 0%, #fb7185 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+            --gradient-sidebar: linear-gradient(180deg, #881337 0%, #4a0e1f 50%, #2d0a13 100%);
+            --sidebar-width: 280px;
+            --transition: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: linear-gradient(180deg, #fff1f2 0%, #ffe4e6 30%, #fff5f5 60%, #ffe4e6 100%);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ========== FLOWER FALL BACKGROUND ========== */
+        .flower-garden {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0; left: 0;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* Falling Flowers */
+        .falling-flower {
+            position: absolute;
+            color: rgba(225, 29, 72, 0.2);
+            animation: flowerFall var(--duration) linear infinite;
+            animation-delay: var(--delay);
+            top: -60px;
+        }
+
+        @keyframes flowerFall {
+            0% { transform: translateY(-60px) translateX(0) rotate(0deg) scale(0.7); opacity: 0; }
+            10% { opacity: 0.8; }
+            30% { transform: translateY(30vh) translateX(var(--drift1)) rotate(120deg) scale(1); opacity: 0.7; }
+            60% { transform: translateY(60vh) translateX(var(--drift2)) rotate(250deg) scale(0.85); opacity: 0.5; }
+            85% { opacity: 0.25; }
+            100% { transform: translateY(110vh) translateX(var(--drift3)) rotate(400deg) scale(0.5); opacity: 0; }
+        }
+
+        /* Floating Petals */
+        .petal {
+            position: absolute;
+            width: 8px; height: 8px;
+            border-radius: 50% 0 50% 0;
+            background: rgba(225, 29, 72, 0.15);
+            animation: petalDrift var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes petalDrift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 0.3; }
+            25% { transform: translate(var(--px1), var(--py1)) rotate(90deg) scale(1.3); opacity: 0.6; }
+            50% { transform: translate(var(--px2), var(--py2)) rotate(180deg) scale(0.9); opacity: 0.4; }
+            75% { transform: translate(var(--px3), var(--py3)) rotate(270deg) scale(1.1); opacity: 0.5; }
+        }
+
+        /* Warm Glow Orbs */
+        .blossom-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            animation: glowPulse var(--duration) ease-in-out infinite alternate;
+        }
+
+        @keyframes glowPulse {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.06; }
+            100% { transform: translate(30px, -20px) scale(1.15); opacity: 0.1; }
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: var(--gradient-sidebar);
+            position: fixed;
+            left: 0; top: 0;
+            display: flex; flex-direction: column;
+            z-index: 50;
+            backdrop-filter: blur(10px);
+            box-shadow: 4px 0 30px rgba(0, 0, 0, 0.3);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            transition: transform 0.4s var(--spring);
+            overflow: hidden;
+        }
+
+        .sidebar::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background:
+                    radial-gradient(circle at 30% 20%, rgba(225, 29, 72, 0.2) 0%, transparent 50%),
+                    radial-gradient(circle at 70% 70%, rgba(251, 113, 133, 0.15) 0%, transparent 50%);
+            animation: roseGlow 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes roseGlow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 0.9; }
+        }
+
+        .sidebar-logo {
+            padding: 1.75rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none;
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem;
+            color: #fff;
+            position: relative; z-index: 1;
+        }
+
+        .sidebar-logo:hover { opacity: 0.9; }
+
+        .sidebar-logo-icon {
+            width: 42px; height: 42px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            color: white;
+            font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem;
+            box-shadow: 0 8px 20px var(--brand-glow);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 8px 20px var(--brand-glow); }
+            50% { transform: scale(1.08); box-shadow: 0 12px 30px var(--brand-glow), 0 0 40px rgba(225, 29, 72, 0.4); }
+        }
+
+        .sidebar-nav {
+            flex: 1; padding: 1.25rem 0.75rem;
+            overflow-y: auto; position: relative; z-index: 1;
+        }
+
+        .sidebar-nav::-webkit-scrollbar { width: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.4); }
+        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+
+        .sidebar-section {
+            font-size: 0.65rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.15em;
+            color: rgba(255, 255, 255, 0.4);
+            padding: 1.5rem 1rem 0.75rem; margin-top: 0.5rem;
+        }
+
+        .sidebar-item {
+            display: flex; align-items: center; gap: 14px;
+            padding: 0.85rem 1rem; margin-bottom: 0.25rem;
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            text-decoration: none;
+            font-size: 0.9rem; font-weight: 500;
+            transition: all 0.3s var(--spring);
+            position: relative; overflow: hidden;
+        }
+
+        .sidebar-item i {
+            font-size: 18px; width: 20px; text-align: center;
+            opacity: 0.7; transition: all 0.3s var(--bounce);
+        }
+
+        .sidebar-item::before {
+            content: '';
+            position: absolute; left: 0; top: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .sidebar-item:hover::before { transform: translateX(100%); }
+
+        .sidebar-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            transform: translateX(6px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar-item:hover i {
+            opacity: 1; transform: scale(1.15) rotate(5deg);
+            color: var(--accent);
+            filter: drop-shadow(0 0 8px var(--accent-glow));
+        }
+
+        .sidebar-item.active {
+            background: rgba(251, 113, 133, 0.2);
+            color: #fff; font-weight: 600;
+            box-shadow: 0 4px 20px rgba(225, 29, 72, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .sidebar-item.active i {
+            opacity: 1; color: var(--accent);
+            animation: iconGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes iconGlow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(251, 113, 133, 0.5)); }
+            50% { filter: drop-shadow(0 0 16px rgba(251, 113, 133, 0.8)); }
+        }
+
+        .sidebar-student-btn {
+            margin: 8px 0.75rem; padding: 12px 16px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            transition: all 0.3s var(--bounce);
+            cursor: pointer;
+            box-shadow: 0 8px 20px var(--brand-glow);
+        }
+
+        .sidebar-student-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(225, 29, 72, 0.5);
+        }
+
+        .sidebar-student-btn a {
+            display: flex; align-items: center; gap: 12px;
+            text-decoration: none; color: white;
+            font-weight: 600; font-size: 14px;
+        }
+
+        .sidebar-footer {
+            padding: 1rem 0.75rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative; z-index: 1;
+        }
+
+        .sidebar-user {
+            display: flex; align-items: center; gap: 10px;
+            padding: 0.5rem; border-radius: 12px;
+            cursor: pointer; transition: all 0.3s;
+        }
+
+        .sidebar-user:hover { background: rgba(255, 255, 255, 0.12); transform: translateX(4px); }
+
+        .sidebar-user-avatar {
+            width: 40px; height: 40px;
+            border-radius: 12px;
+            background: var(--gradient-primary);
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.85rem;
+            color: white;
+            box-shadow: 0 4px 12px var(--brand-glow);
+            transition: all 0.3s;
+        }
+
+        .sidebar-user:hover .sidebar-user-avatar { transform: scale(1.1); box-shadow: 0 8px 20px var(--brand-glow); }
+
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(45, 10, 19, 0.5);
+            backdrop-filter: blur(4px);
+            z-index: 40;
+        }
+        .sidebar-overlay.active { display: block; }
+
+        /* ========== HAMBURGER ========== */
+        .hamburger {
+            display: none;
+            position: fixed; top: 1rem; left: 1rem; z-index: 60;
+            width: 46px; height: 46px;
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 12px;
+            align-items: center; justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s var(--bounce);
+            padding: 0;
+        }
+
+        .hamburger:hover { transform: scale(1.05); }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            padding: 2rem 3rem;
+            transition: margin 0.3s ease;
+            animation: contentSlideIn 0.8s var(--spring);
+        }
+
+        @keyframes contentSlideIn {
+            from { opacity: 0; transform: translateY(-20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        }
+
+        .page-header {
+            display: flex; justify-content: space-between; align-items: flex-start;
+            margin-bottom: 2.5rem; flex-wrap: wrap; gap: 1rem;
+        }
+
+        .page-title {
+            font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
+        }
+
+        .page-subtitle { font-size: 14px; color: var(--text-muted); margin-top: 4px; font-weight: 500; }
+        .header-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+
+        .live-clock {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 20px;
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 14px;
+            font-weight: 500;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06);
+            transition: all 0.3s var(--spring);
+        }
+
+        .live-clock:hover { transform: translateY(-2px); }
+        .live-clock i { color: var(--brand); font-size: 16px; }
+        #live-time { font-weight: 700; font-size: 16px; color: var(--text); }
+        #live-date { font-size: 12px; color: var(--text-muted); }
+
+        .btn-add {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 12px 24px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-weight: 600; font-size: 14px;
+            cursor: pointer;
+            font-family: 'DM Sans', sans-serif;
+            transition: all 0.3s var(--bounce);
+            box-shadow: 0 8px 24px var(--brand-glow);
+            position: relative; overflow: hidden;
+        }
+
+        .btn-add::before {
+            content: '';
+            position: absolute; top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn-add:hover::before { width: 300px; height: 300px; }
+        .btn-add:hover { transform: translateY(-3px); box-shadow: 0 12px 36px var(--brand-glow); }
+        .btn-add:active { transform: scale(0.95); }
+
+        .flash-message {
+            padding: 14px 20px; border-radius: 14px;
+            margin-bottom: 1.5rem; font-weight: 500;
+            animation: fadeInUp 0.5s var(--spring);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .flash-success { background: rgba(16, 185, 129, 0.1); color: #059669; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .flash-error { background: var(--danger-light); color: #e11d48; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 1.75rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            transition: all 0.5s var(--spring);
+            cursor: pointer;
+            position: relative; overflow: hidden;
+            animation: cardEntrance 0.8s var(--spring) backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes cardEntrance {
+            from { opacity: 0; transform: translateY(40px) scale(0.9); filter: blur(10px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.03);
+            box-shadow: 0 24px 64px rgba(225, 29, 72, 0.2), 0 8px 24px rgba(225, 29, 72, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            border-color: rgba(225, 29, 72, 0.5);
+        }
+
+        .stat-icon {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 22px;
+            margin-bottom: 16px;
+            transition: all 0.3s var(--bounce);
+            position: relative; z-index: 2;
+        }
+
+        .stat-card:hover .stat-icon { transform: scale(1.1) rotate(-5deg); }
+        .stat-icon.rose { background: var(--gradient-primary); color: #fff; box-shadow: 0 8px 20px var(--brand-glow); }
+        .stat-icon.green { background: var(--gradient-success); color: #fff; box-shadow: 0 8px 20px var(--success-glow); }
+        .stat-icon.amber { background: var(--gradient-warning); color: #fff; box-shadow: 0 8px 20px var(--warning-glow); }
+        .stat-icon.coral { background: var(--gradient-danger); color: #fff; box-shadow: 0 8px 20px var(--danger-glow); }
+
+        .stat-value {
+            font-size: 36px; font-weight: 800;
+            color: var(--text);
+            letter-spacing: -1.5px; line-height: 1;
+            margin-bottom: 6px;
+            position: relative; z-index: 2;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover .stat-value {
+            transform: scale(1.05);
+            background: var(--gradient-primary);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 13px; color: var(--text-muted);
+            font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative; z-index: 2;
+        }
+
+        .content-card {
+            background: var(--surface-glass);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.04), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            overflow: hidden;
+            transition: all 0.5s var(--spring);
+        }
+
+        .toolbar {
+            padding: 1.5rem 1.8rem;
+            display: flex; justify-content: space-between;
+            align-items: center; flex-wrap: wrap; gap: 15px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+        }
+
+        .search-box { position: relative; flex: 1; min-width: 250px; max-width: 400px; }
+        .search-box i {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 1rem; z-index: 2;
+        }
+
+        .search-input {
+            width: 100%; height: 50px;
+            border-radius: 14px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            padding: 0 20px 0 45px;
+            outline: none;
+            font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s var(--transition);
+            color: var(--text);
+        }
+
+        .search-input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px var(--brand-light); }
+
+        .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+        .filter-btn {
+            padding: 10px 20px; border-radius: 30px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+            transition: all 0.3s var(--bounce);
+            color: var(--text-muted);
+        }
+
+        .filter-btn:hover { border-color: var(--brand); color: var(--brand); }
+        .filter-btn.active {
+            background: var(--gradient-primary);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 15px var(--brand-glow);
+        }
+
+        .table-wrapper { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; }
+
+        thead {
+            background: linear-gradient(180deg, rgba(225, 29, 72, 0.08) 0%, transparent 100%);
+            position: relative;
+        }
+
+        thead::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0;
+            width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(225, 29, 72, 0.3), rgba(251, 113, 133, 0.3), transparent);
+        }
+
+        th {
+            text-align: left; padding: 16px 20px;
+            color: var(--text-muted); font-weight: 700;
+            font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; white-space: nowrap;
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            color: var(--text);
+            transition: all 0.3s;
+        }
+
+        tbody tr {
+            transition: all 0.4s var(--spring);
+            position: relative;
+        }
+
+        tbody tr:hover {
+            background: rgba(225, 29, 72, 0.04);
+            transform: scale(1.01);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
+        }
+
+        .td-amount { font-family: 'Syne', sans-serif; font-weight: 700; color: #e11d48; font-size: 1rem; }
+
+        .badge {
+            padding: 5px 12px; border-radius: 20px;
+            font-size: 0.7rem; font-weight: 700;
+            text-transform: uppercase; letter-spacing: 0.5px;
+            display: inline-flex; align-items: center; gap: 6px;
+        }
+
+        .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+        .badge-online { background: #eff6ff; color: #1e40af; }
+        .badge-online .badge-dot { background: #3b82f6; }
+        .badge-cash { background: #fef3c7; color: #92400e; }
+        .badge-cash .badge-dot { background: #f59e0b; }
+        .badge-status.completed { background: #d1fae5; color: #065f46; }
+        .badge-status.completed .badge-dot { background: #10b981; }
+        .badge-status.pending { background: #fef3c7; color: #92400e; }
+        .badge-status.pending .badge-dot { background: #f59e0b; }
+        .badge-status.failed { background: #fee2e2; color: #991b1b; }
+        .badge-status.failed .badge-dot { background: #ef4444; }
+
+        .actions { display: flex; gap: 8px; }
+        .btn-edit {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 12px; border: none;
+            background: var(--warning-light);
+            color: #92400e; font-weight: 700; cursor: pointer;
+            font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+            transition: all 0.3s var(--bounce);
+        }
+
+        .btn-edit:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--warning-glow); }
+        .btn-delete {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 8px 16px; border-radius: 12px; border: none;
+            background: var(--danger-light);
+            color: #991b1b; font-weight: 700; cursor: pointer;
+            font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+            transition: all 0.3s var(--bounce);
+        }
+
+        .btn-delete:hover { transform: translateY(-2px); box-shadow: 0 4px 12px var(--danger-glow); }
+
+        .empty-state { text-align: center; padding: 4rem 2rem; color: var(--text-muted); }
+        .empty-state i {
+            font-size: 64px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-bar {
+            padding: 1rem 1.8rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.06);
+            font-size: 0.85rem; color: var(--text-muted);
+            display: flex; justify-content: space-between;
+        }
+
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(45, 10, 19, 0.6);
+            backdrop-filter: blur(8px);
+            display: none; align-items: center; justify-content: center;
+            z-index: 300; padding: 20px;
+        }
+
+        .modal-overlay.show { display: flex; }
+
+        .modal {
+            width: 100%; max-width: 560px;
+            background: var(--surface-glass);
+            backdrop-filter: blur(30px);
+            border-radius: 28px; overflow: hidden;
+            animation: modalPop 0.5s var(--spring);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        @keyframes modalPop {
+            from { opacity: 0; transform: scale(0.8) translateY(30px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .modal-header {
+            padding: 28px;
+            background: var(--gradient-primary);
+            color: white;
+            display: flex; align-items: center; gap: 18px;
+        }
+
+        .modal-icon {
+            width: 60px; height: 60px; border-radius: 18px;
+            background: rgba(255, 255, 255, 0.15);
+            display: flex; justify-content: center; align-items: center; flex-shrink: 0;
+        }
+
+        .modal-icon i { font-size: 28px; }
+        .modal-header h2 { font-size: 1.5rem; font-family: 'Syne', sans-serif; font-weight: 700; }
+        .modal-header p { opacity: 0.9; margin-top: 4px; font-size: 0.9rem; }
+
+        .form-grid { padding: 28px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: 1 / -1; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-weight: 700; font-size: 0.85rem; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+        .input-box { position: relative; }
+        .input-box i {
+            position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+            color: var(--text-muted); font-size: 1rem; z-index: 2; pointer-events: none;
+        }
+
+        .input-box input, .input-box select, .input-box textarea {
+            width: 100%; height: 52px; border-radius: 14px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            padding-left: 45px; padding-right: 15px;
+            outline: none;
+            transition: all 0.3s var(--transition);
+            font-size: 0.9rem;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--text);
+        }
+
+        .input-box textarea { height: 100px; padding-top: 14px; resize: vertical; }
+        .input-box input:focus, .input-box select:focus, .input-box textarea:focus {
+            border-color: var(--brand); background: white;
+            box-shadow: 0 0 0 4px var(--brand-light);
+        }
+
+        .modal-actions { padding: 0 28px 28px; display: flex; justify-content: flex-end; gap: 15px; }
+        .btn-cancel {
+            padding: 14px 24px; border-radius: 14px;
+            border: 2px solid rgba(0, 0, 0, 0.08);
+            background: var(--surface-glass);
+            backdrop-filter: blur(10px);
+            color: var(--text-muted);
+            cursor: pointer; font-weight: 700;
+            font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+            transition: all 0.3s var(--bounce);
+        }
+
+        .btn-cancel:hover { background: rgba(0, 0, 0, 0.04); }
+        .btn-save {
+            padding: 14px 28px; border-radius: 14px; border: none;
+            background: var(--gradient-primary);
+            color: white;
+            cursor: pointer; font-weight: 700;
+            font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+            transition: all 0.3s var(--bounce);
+            box-shadow: 0 8px 24px var(--brand-glow);
+        }
+
+        .btn-save:hover { transform: translateY(-2px); box-shadow: 0 12px 36px var(--brand-glow); }
+
+        .notification {
+            position: fixed; top: 20px; right: 20px; z-index: 9999;
+            padding: 15px 24px; border-radius: 16px; color: white;
+            font-weight: 700; font-family: 'DM Sans', sans-serif;
+            transform: translateX(150%);
+            transition: transform 0.4s var(--spring);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .notification.show { transform: translateX(0); }
+        .notification.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .notification.error { background: linear-gradient(135deg, #ef4444, #dc2626); }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(225, 29, 72, 0.2); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(225, 29, 72, 0.4); }
+
+        @media (max-width: 1024px) {
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); box-shadow: 8px 0 40px rgba(0, 0, 0, 0.3); }
+            .main-content { margin-left: 0; padding: 5.5rem 2rem 2rem; }
+            .hamburger { display: flex; }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; gap: 1rem; }
+            .stat-card { padding: 1.25rem; }
+            .stat-value { font-size: 28px; }
+            .page-header { flex-direction: column; }
+            .form-grid { grid-template-columns: 1fr; }
+            .modal-actions { flex-direction: column; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+            .search-box { max-width: 100%; }
+            .actions { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .main-content { padding: 5rem 1rem 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .page-title { font-size: 24px; }
+        }
+
+        @media print {
+            .sidebar, .hamburger, .sidebar-overlay, .flower-garden { display: none !important; }
+            .main-content { margin-left: 0; padding: 0; }
+            body { background: white; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Flower Garden Background -->
+<div class="flower-garden" id="flowerGarden">
+    <div class="blossom-glow" style="width:500px;height:500px;background:rgba(225,29,72,0.08);top:-80px;right:-80px;--duration:15s;"></div>
+    <div class="blossom-glow" style="width:400px;height:400px;background:rgba(251,113,133,0.06);bottom:-60px;left:-60px;--duration:18s;"></div>
+</div>
+
+<div class="notification" id="notification"></div>
+
+<button class="hamburger" onclick="toggleSidebar()" aria-label="Toggle menu">
+    <i class="fas fa-bars" style="font-size: 18px; color: var(--text);"></i>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR - Fixed Navigation -->
+<aside class="sidebar" id="sidebar">
+    <a th:href="@{/admin/dashboard}" class="sidebar-logo">
+        <div class="sidebar-logo-icon">S</div>
+        <span style="font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; color: #fff;">SCMS</span>
+    </a>
+
+    <nav class="sidebar-nav">
+        <div class="sidebar-section">Main Menu</div>
+        <a th:href="@{/admin/dashboard}" class="sidebar-item"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a th:href="@{/admin/students}" class="sidebar-item"><i class="fas fa-user-graduate"></i> Students</a>
+        <a th:href="@{/admin/courses}" class="sidebar-item"><i class="fas fa-book-open"></i> Courses</a>
+
+        <div class="sidebar-section">Management</div>
+        <a th:href="@{/admin/enrollments}" class="sidebar-item"><i class="fas fa-clipboard-list"></i> Enrollments</a>
+        <a th:href="@{/admin/lecturers}" class="sidebar-item"><i class="fas fa-chalkboard-teacher"></i> Lecturers</a>
+        <a th:href="@{/admin/payments}" class="sidebar-item active"><i class="fas fa-credit-card"></i> Payments</a>
+
+        <div class="sidebar-student-btn">
+            <a th:href="@{/student/dashboard}"><i class="fas fa-graduation-cap"></i> Student Portal</a>
+        </div>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="sidebar-user">
+            <div class="sidebar-user-avatar">AD</div>
+            <div>
+                <div style="color: white; font-weight: 600; font-size: 14px;">Admin User</div>
+                <div style="color: rgba(255,255,255,0.5); font-size: 12px;">Administrator</div>
+            </div>
+        </div>
+    </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Payment Management</h1>
+            <p class="page-subtitle">Manage all payment transactions</p>
+        </div>
+        <div class="header-actions">
+            <div class="live-clock">
+                <i class="far fa-clock"></i>
+                <div><div id="live-time">00:00:00</div><div id="live-date">Loading...</div></div>
+            </div>
+            <button class="btn-add" onclick="openAddModal()"><i class="fas fa-plus"></i> Add Payment</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon rose"><i class="fas fa-receipt"></i></div><div class="stat-value" id="stat-total">0</div><div class="stat-label">Total Payments</div></div>
+        <div class="stat-card"><div class="stat-icon green"><i class="fas fa-check-circle"></i></div><div class="stat-value" id="stat-completed">0</div><div class="stat-label">Completed</div></div>
+        <div class="stat-card"><div class="stat-icon amber"><i class="fas fa-clock"></i></div><div class="stat-value" id="stat-pending">0</div><div class="stat-label">Pending</div></div>
+        <div class="stat-card"><div class="stat-icon coral"><i class="fas fa-times-circle"></i></div><div class="stat-value" id="stat-failed">0</div><div class="stat-label">Failed</div></div>
+    </div>
+
+    <div class="content-card">
+        <div class="toolbar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" class="search-input" placeholder="Search by student name..." id="searchInput" oninput="filterRows()">
+            </div>
+            <div class="filters">
+                <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+                <button class="filter-btn" onclick="setFilter('COMPLETED', this)">Completed</button>
+                <button class="filter-btn" onclick="setFilter('PENDING', this)">Pending</button>
+                <button class="filter-btn" onclick="setFilter('FAILED', this)">Failed</button>
+            </div>
+        </div>
+        <div class="table-wrapper">
+            <table>
+                <thead><tr><th>ID</th><th>Student</th><th>Amount</th><th>Type</th><th>Date</th><th>Status</th><th>Summary</th><th>Actions</th></tr></thead>
+                <tbody id="paymentTable"></tbody>
+            </table>
+        </div>
+        <div class="footer-bar">
+            <span id="footerCount">Showing 0 of 0 payments</span>
+            <span id="lastUpdated">Last updated: Never</span>
+        </div>
+    </div>
+</main>
+
+<!-- Add/Edit Payment Modal -->
+<div class="modal-overlay" id="formOverlay">
+    <div class="modal" style="max-width:600px;">
+        <div class="modal-header">
+            <div class="modal-icon"><i class="fas fa-credit-card"></i></div>
+            <div><h2 id="formTitle">Add New Payment</h2><p>Fill in the payment details below</p></div>
+        </div>
+        <div class="form-grid">
+            <div class="form-group full-width"><label>Student</label><div class="input-box"><i class="fas fa-user"></i><select id="paymentStudent"><option value="">Select student...</option></select></div></div>
+            <div class="form-group"><label>Amount (LKR)</label><div class="input-box"><i class="fas fa-dollar-sign"></i><input type="number" id="paymentAmount" placeholder="Enter amount"></div></div>
+            <div class="form-group"><label>Type</label><div class="input-box"><i class="fas fa-tag"></i><select id="paymentType"><option value="ONLINE">Online</option><option value="CASH">Cash</option></select></div></div>
+            <div class="form-group"><label>Date</label><div class="input-box"><i class="fas fa-calendar"></i><input type="date" id="paymentDate"></div></div>
+            <div class="form-group"><label>Status</label><div class="input-box"><i class="fas fa-info-circle"></i><select id="paymentStatus"><option value="COMPLETED">Completed</option><option value="PENDING">Pending</option><option value="FAILED">Failed</option></select></div></div>
+            <div class="form-group full-width"><label>Summary</label><div class="input-box"><i class="fas fa-align-left"></i><textarea id="paymentSummary" placeholder="Payment description..."></textarea></div></div>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeFormModal()">Cancel</button>
+            <button class="btn-save" onclick="savePayment()">Save Payment</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ========== CREATE FLOWER GARDEN ==========
+    function createFlowerGarden() {
+        var container = document.getElementById('flowerGarden');
+        if (!container) return;
+
+        // Falling flowers
+        var flowerEmojis = ['🌸', '🌺', '🌷', '🌹', '🌼', '💐', '🌻', '🏵️'];
+        for (var i = 0; i < 30; i++) {
+            var flower = document.createElement('div');
+            flower.className = 'falling-flower';
+            flower.textContent = flowerEmojis[Math.floor(Math.random() * flowerEmojis.length)];
+            flower.style.left = Math.random() * 95 + '%';
+            flower.style.fontSize = (Math.random() * 22 + 14) + 'px';
+            flower.style.setProperty('--duration', (Math.random() * 10 + 8) + 's');
+            flower.style.setProperty('--delay', Math.random() * 12 + 's');
+            flower.style.setProperty('--drift1', (Math.random() - 0.5) * 80 + 'px');
+            flower.style.setProperty('--drift2', (Math.random() - 0.5) * 120 + 'px');
+            flower.style.setProperty('--drift3', (Math.random() - 0.5) * 100 + 'px');
+            container.appendChild(flower);
+        }
+
+        // Petals
+        for (var j = 0; j < 20; j++) {
+            var petal = document.createElement('div');
+            petal.className = 'petal';
+            petal.style.left = Math.random() * 95 + '%';
+            petal.style.top = Math.random() * 85 + '%';
+            petal.style.setProperty('--duration', (Math.random() * 8 + 5) + 's');
+            petal.style.setProperty('--delay', Math.random() * 5 + 's');
+            petal.style.setProperty('--px1', (Math.random() - 0.5) * 100 + 'px');
+            petal.style.setProperty('--py1', (Math.random() - 0.5) * 100 + 'px');
+            petal.style.setProperty('--px2', (Math.random() - 0.5) * 150 + 'px');
+            petal.style.setProperty('--py2', (Math.random() - 0.5) * 150 + 'px');
+            petal.style.setProperty('--px3', (Math.random() - 0.5) * 80 + 'px');
+            petal.style.setProperty('--py3', (Math.random() - 0.5) * 80 + 'px');
+            container.appendChild(petal);
+        }
+    }
+    createFlowerGarden();
+
+    // ========== DATA ==========
+    var STORAGE_KEY = 'scms_payments_data';
+    var payments = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
+        { id:1, studentName:'John Smith', amount:75000, type:'ONLINE', paymentDate:'2026-05-01', status:'COMPLETED', paymentSummary:'Tuition fee - Semester 1' },
+        { id:2, studentName:'Jane Doe', amount:120000, type:'CASH', paymentDate:'2026-05-03', status:'COMPLETED', paymentSummary:'Full year tuition' },
+        { id:3, studentName:'John Smith', amount:25000, type:'ONLINE', paymentDate:'2026-05-10', status:'PENDING', paymentSummary:'Lab fee payment' },
+        { id:4, studentName:'Jane Doe', amount:15000, type:'ONLINE', paymentDate:'2026-04-28', status:'FAILED', paymentSummary:'Library fee' }
+    ];
+    var activeFilter = 'all', editingId = null;
+
+    function toggleSidebar() {
+        var s = document.getElementById('sidebar'), o = document.getElementById('sidebarOverlay');
+        if (!s || !o) return;
+        if (s.classList.contains('open')) { closeSidebar(); }
+        else { s.classList.add('open'); o.classList.add('active'); document.body.style.overflow = 'hidden'; }
+    }
+
+    function closeSidebar() {
+        var s = document.getElementById('sidebar'), o = document.getElementById('sidebarOverlay');
+        if (!s || !o) return;
+        s.classList.remove('open'); o.classList.remove('active');
+        var m = document.getElementById('formOverlay');
+        if (!m || !m.classList.contains('show')) document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('.sidebar-item').forEach(function(item) {
+        item.addEventListener('click', function() { if (window.innerWidth <= 1024) closeSidebar(); });
+    });
+
+    function updateClock() {
+        var n = new Date(), t = document.getElementById('live-time'), d = document.getElementById('live-date');
+        if (t) t.textContent = n.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        if (d) d.textContent = n.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    }
+    setInterval(updateClock, 1000); updateClock();
+
+    function showNotification(msg, type) {
+        var el = document.getElementById('notification'); if (!el) return;
+        el.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + msg;
+        el.className = "notification " + (type || "success") + " show";
+        if (el._timeout) clearTimeout(el._timeout);
+        el._timeout = setTimeout(function() { el.classList.remove('show'); }, 3000);
+    }
+
+    function saveStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(payments)); }
+
+    function getNextId() { var m = 0; for (var i = 0; i < payments.length; i++) { if (payments[i].id > m) m = payments[i].id; } return m + 1; }
+
+    function renderPayments() {
+        var tbody = document.getElementById('paymentTable');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        for (var i = 0; i < payments.length; i++) {
+            var p = payments[i];
+            var tc = p.type === 'ONLINE' ? 'badge-online' : 'badge-cash', tl = p.type === 'ONLINE' ? 'Online' : 'Cash';
+            var sc = p.status.toLowerCase(), sl = p.status.charAt(0) + p.status.slice(1).toLowerCase();
+            var tr = document.createElement('tr');
+            tr.setAttribute('data-status', p.status);
+            tr.setAttribute('data-name', p.studentName.toLowerCase());
+            tr.innerHTML = '<td><strong>#' + p.id + '</strong></td>' +
+                '<td><strong>' + p.studentName + '</strong></td>' +
+                '<td class="td-amount">LKR ' + p.amount.toLocaleString() + '</td>' +
+                '<td><span class="badge ' + tc + '"><span class="badge-dot"></span>' + tl + '</span></td>' +
+                '<td>' + p.paymentDate + '</td>' +
+                '<td><span class="badge badge-status ' + sc + '"><span class="badge-dot"></span>' + sl + '</span></td>' +
+                '<td>' + p.paymentSummary + '</td>' +
+                '<td><div class="actions">' +
+                '<button class="btn-edit" onclick="editPayment(' + p.id + ')"><i class="fas fa-edit"></i> Edit</button>' +
+                '<button class="btn-delete" onclick="deletePayment(' + p.id + ')"><i class="fas fa-trash"></i> Delete</button>' +
+                '</div></td>';
+            tbody.appendChild(tr);
+        }
+        filterRows(); updateStats();
+    }
+
+    function updateStats() {
+        var c = 0, p = 0, f = 0;
+        for (var i = 0; i < payments.length; i++) {
+            if (payments[i].status === 'COMPLETED') c++;
+            else if (payments[i].status === 'PENDING') p++;
+            else f++;
+        }
+        var totalEl = document.getElementById('stat-total'), completedEl = document.getElementById('stat-completed');
+        var pendingEl = document.getElementById('stat-pending'), failedEl = document.getElementById('stat-failed');
+        if (totalEl) totalEl.textContent = payments.length;
+        if (completedEl) completedEl.textContent = c;
+        if (pendingEl) pendingEl.textContent = p;
+        if (failedEl) failedEl.textContent = f;
+    }
+
+    function setFilter(type, btn) {
+        activeFilter = type;
+        var btns = document.querySelectorAll('.filter-btn');
+        for (var i = 0; i < btns.length; i++) btns[i].classList.remove('active');
+        btn.classList.add('active');
+        filterRows();
+    }
+
+    function filterRows() {
+        var q = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+        var rows = document.querySelectorAll('#paymentTable tr');
+        var v = 0;
+        for (var i = 0; i < rows.length; i++) {
+            var r = rows[i], s = r.getAttribute('data-status'), n = r.getAttribute('data-name');
+            var ms = !q || (n && n.indexOf(q) !== -1), mf = activeFilter === 'all' || s === activeFilter;
+            r.style.display = (ms && mf) ? '' : 'none';
+            if (ms && mf) v++;
+        }
+        var footerEl = document.getElementById('footerCount'), updateEl = document.getElementById('lastUpdated');
+        if (footerEl) footerEl.textContent = 'Showing ' + v + ' of ' + payments.length + ' payments';
+        if (updateEl) updateEl.textContent = 'Last updated: ' + new Date().toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function openAddModal() {
+        editingId = null;
+        document.getElementById('formTitle').textContent = 'Add New Payment';
+        document.getElementById('paymentStudent').value = '';
+        document.getElementById('paymentAmount').value = '';
+        document.getElementById('paymentType').value = 'ONLINE';
+        document.getElementById('paymentDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('paymentStatus').value = 'COMPLETED';
+        document.getElementById('paymentSummary').value = '';
+        populateDropdown();
+        document.getElementById('formOverlay').classList.add('show');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeFormModal() {
+        document.getElementById('formOverlay').classList.remove('show');
+        var s = document.getElementById('sidebar');
+        if (!s || !s.classList.contains('open')) document.body.style.overflow = '';
+    }
+
+    function populateDropdown() {
+        var sel = document.getElementById('paymentStudent');
+        sel.innerHTML = '<option value="">Select student...</option>';
+        var st = JSON.parse(localStorage.getItem('scms_students_data') || '[]');
+        if (st.length === 0) { sel.innerHTML += '<option>John Smith</option><option>Jane Doe</option>'; }
+        else { for (var i = 0; i < st.length; i++) sel.innerHTML += '<option value="' + st[i].name + '">' + st[i].name + '</option>'; }
+    }
+
+    function savePayment() {
+        var sn = document.getElementById('paymentStudent').value;
+        var am = parseInt(document.getElementById('paymentAmount').value);
+        var ty = document.getElementById('paymentType').value;
+        var pd = document.getElementById('paymentDate').value;
+        var st = document.getElementById('paymentStatus').value;
+        var sm = document.getElementById('paymentSummary').value.trim();
+
+        if (!sn || isNaN(am) || am <= 0 || !pd || !sm) { showNotification('Please fill all fields', 'error'); return; }
+
+        if (editingId !== null) {
+            for (var i = 0; i < payments.length; i++) {
+                if (payments[i].id === editingId) {
+                    payments[i].studentName = sn; payments[i].amount = am;
+                    payments[i].type = ty; payments[i].paymentDate = pd;
+                    payments[i].status = st; payments[i].paymentSummary = sm;
+                    break;
+                }
+            }
+            showNotification('Payment updated!', 'success');
+        } else {
+            payments.push({ id: getNextId(), studentName: sn, amount: am, type: ty, paymentDate: pd, status: st, paymentSummary: sm });
+            showNotification('Payment added!', 'success');
+        }
+        saveStorage(); closeFormModal(); renderPayments();
+    }
+
+    function editPayment(id) {
+        for (var i = 0; i < payments.length; i++) {
+            if (payments[i].id === id) {
+                editingId = id;
+                document.getElementById('formTitle').textContent = 'Edit Payment';
+                document.getElementById('paymentStudent').value = payments[i].studentName;
+                document.getElementById('paymentAmount').value = payments[i].amount;
+                document.getElementById('paymentType').value = payments[i].type;
+                document.getElementById('paymentDate').value = payments[i].paymentDate;
+                document.getElementById('paymentStatus').value = payments[i].status;
+                document.getElementById('paymentSummary').value = payments[i].paymentSummary;
+                populateDropdown();
+                document.getElementById('formOverlay').classList.add('show');
+                document.body.style.overflow = 'hidden';
+                return;
+            }
+        }
+    }
+
+    function deletePayment(id) {
+        if (!confirm('Are you sure you want to delete this payment?')) return;
+        var newList = [];
+        for (var i = 0; i < payments.length; i++) { if (payments[i].id !== id) newList.push(payments[i]); }
+        payments = newList;
+        saveStorage(); renderPayments();
+        showNotification('Payment deleted!', 'success');
+    }
+
+    document.getElementById('formOverlay').addEventListener('click', function(e) { if (e.target === this) closeFormModal(); });
+    window.addEventListener('resize', function() { if (window.innerWidth > 1024) closeSidebar(); });
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            if (document.getElementById('formOverlay').classList.contains('show')) closeFormModal();
+            else closeSidebar();
+        }
+    });
+
+    renderPayments();
+</script>
+</body>
+</html>

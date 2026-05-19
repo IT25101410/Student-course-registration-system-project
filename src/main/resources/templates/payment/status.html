@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{common/layout :: layout('Update Status', 'payments', ~{::content})}">
+<body>
+<th:block th:fragment="content">
+
+    <div class="page-header">
+        <h1>Update Payment Status</h1>
+        <a th:href="@{/payments}" class="btn">← Back</a>
+    </div>
+
+    <div class="card">
+        <p style="margin-bottom:1rem; color:#718096;">
+            Payment ID: <strong th:text="${payment.id}"></strong> |
+            Student: <strong th:text="${payment.studentName}"></strong> |
+            Amount: <strong th:text="'LKR ' + ${payment.amount}"></strong>
+        </p>
+
+        <form th:action="@{/payments/update-status/{id}(id=${payment.id})}"
+              method="post">
+            <div class="form-group">
+                <label>Status</label>
+                <select name="status" required>
+                    <option value="COMPLETED"
+                            th:selected="${payment.status == 'COMPLETED'}">
+                        Completed
+                    </option>
+                    <option value="PENDING"
+                            th:selected="${payment.status == 'PENDING'}">
+                        Pending
+                    </option>
+                    <option value="FAILED"
+                            th:selected="${payment.status == 'FAILED'}">
+                        Failed
+                    </option>
+                </select>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    Update Status
+                </button>
+                <a th:href="@{/payments}" class="btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</th:block>
+</body>
+</html>
