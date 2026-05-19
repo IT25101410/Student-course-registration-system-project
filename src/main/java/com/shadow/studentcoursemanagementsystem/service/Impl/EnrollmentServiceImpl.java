@@ -1,7 +1,7 @@
 package com.shadow.studentcoursemanagementsystem.service.Impl;
 
 
-import com.shadow.studentcoursemanagementsystem.service.EnrollmentService;
+import com.shadow.studentcoursemanagementsystem.dto.EnrollmentRequestDTO;
 import com.shadow.studentcoursemanagementsystem.dto.EnrollmentResponseDTO;
 import com.shadow.studentcoursemanagementsystem.model.Course;
 import com.shadow.studentcoursemanagementsystem.model.Enrollment;
@@ -9,6 +9,7 @@ import com.shadow.studentcoursemanagementsystem.model.Student;
 import com.shadow.studentcoursemanagementsystem.repository.CourseRepository;
 import com.shadow.studentcoursemanagementsystem.repository.EnrollmentRepository;
 import com.shadow.studentcoursemanagementsystem.repository.StudentRepository;
+import com.shadow.studentcoursemanagementsystem.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public  class EnrollmentServiceImpl implements EnrollmentService {
+public class EnrollmentServiceImpl implements EnrollmentService {
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
@@ -30,7 +31,6 @@ public  class EnrollmentServiceImpl implements EnrollmentService {
 
     @Override
     public EnrollmentResponseDTO enrollStudent(EnrollmentRequestDTO dto) {
-
         // Abstraction: check student exists before enrolling
         Student student = studentRepository.findById(dto.getStudentId())
                 .orElseThrow(() -> new RuntimeException(
@@ -91,6 +91,15 @@ public  class EnrollmentServiceImpl implements EnrollmentService {
     }
 
     @Override
+    public List<EnrollmentResponseDTO> getEnrollmentsByStudentId(Long id) {
+        // Fetch from repository and map cleanly into your working DTO structure
+        return enrollmentRepository.findByStudentId(id)
+                .stream()
+                .map(this::mapToResponse)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public void dropCourse(Long enrollmentId) {
         Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
                 .orElseThrow(() -> new RuntimeException(
@@ -104,6 +113,11 @@ public  class EnrollmentServiceImpl implements EnrollmentService {
         enrollmentRepository.save(enrollment);
     }
 
+    @Override
+    public void dropCourseForStudent(Long id, Long id1) {
+        // Leave empty or implement if needed later
+    }
+
     // Polymorphism: full-time gets 6 credits max, part-time gets 3
     private int getMaxCredits(String enrollmentType) {
         if ("FULL_TIME".equalsIgnoreCase(enrollmentType)) {
@@ -115,11 +129,11 @@ public  class EnrollmentServiceImpl implements EnrollmentService {
     private EnrollmentResponseDTO mapToResponse(Enrollment e) {
         return new EnrollmentResponseDTO(
                 e.getId(),
-                e.getStudent().getId(),
-                e.getStudent().getName(),
-                e.getCourse().getId(),
-                e.getCourse().getCourseName(),
-                e.getCourse().getCourseCode(),
+                e.getStudent() != null ? e.getStudent().getId() : null,
+                e.getStudent() != null ? e.getStudent().getName() : "Unknown Student",
+                e.getCourse() != null ? e.getCourse().getId() : null,
+                e.getCourse() != null ? e.getCourse().getCourseName() : "Unknown Course",
+                e.getCourse() != null ? e.getCourse().getCourseCode() : "N/A",
                 e.getEnrollmentDate(),
                 e.getStatus(),
                 e.getEnrollmentType(),
@@ -127,5 +141,3 @@ public  class EnrollmentServiceImpl implements EnrollmentService {
         );
     }
 }
-
-

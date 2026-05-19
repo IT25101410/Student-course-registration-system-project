@@ -1,12 +1,13 @@
 package com.shadow.studentcoursemanagementsystem.controller;
 
-import com.sliit.scrs.dto.*;
+import com.shadow.studentcoursemanagementsystem.dto.EnrollmentRequestDTO;
+import com.shadow.studentcoursemanagementsystem.dto.EnrollmentResponseDTO;
+import com.shadow.studentcoursemanagementsystem.dto.*;
+import com.shadow.studentcoursemanagementsystem.service.EnrollmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.shadow.studentcoursemanagementsystem.dto.EnrollmentRequestDTO;
-import com.shadow.studentcoursemanagementsystem.service.EnrollmentService;
 import java.util.List;
 
 @RestController
@@ -56,4 +57,6 @@ public class EnrollmentController {
         return ResponseEntity.ok("Course dropped successfully.");
     }
 }
+
+
 

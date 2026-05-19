@@ -1,6 +1,6 @@
 package com.shadow.studentcoursemanagementsystem.repository;
 
-import com.sliit.scrs.model.Enrollment;
+import com.shadow.studentcoursemanagementsystem.model.Enrollment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
